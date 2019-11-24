@@ -1,0 +1,223 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Quby Mobiel</title> 
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+    <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+    <meta content="Quby, Online, Thermostaat, Lokaal" name="Keywords" />
+	<!--<meta content="Quby Online Thermostaat. " name="Quby Mobiel" />-->
+	
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    
+	<link rel="stylesheet" href="rsrc/jquery/jquery.mobile-1.0.1.min.css" />
+  <link rel="stylesheet" href="themes/jquerymobile-custom.css" />
+  <link rel="stylesheet" href="themes/custom.css" />
+	<script src="rsrc/jquery/jquery-1.7.1.min.js"></script>
+	<script src="rsrc/jquery/jquery.mobile-1.0.1.min.js"></script>
+	<script src="javascript/mobile.js"></script>
+    <script src="javascript/jquery.wipetouch.js"></script>
+	<script src="rsrc/jquery/jquery.hcb.js"></script>
+	<script src="rsrc/jquery/jquery.sprintf.js"></script>
+	
+	<script type="text/javascript"	>
+		$(document).ready(initPage);
+		$("#main").live( 'pageshow', mainPageLoaded);
+		$("#main").live( 'pagehide', mainPageHidden);
+		
+		$("#consum").live( 'pageshow', usagePageLoaded);
+		$("#consum").live( 'pagehide', usagePageHidden);
+		
+	$(function(){ 
+			   
+		$("#main").bind('swipeleft',function(event, ui){            
+		   $.mobile.changePage("#consum", { transition: "slide"} ); 
+		   })      
+	   $("#consum").bind('swiperight',function(event, ui){ 
+		 $.mobile.changePage("#main", { transition: "reverse slide"} );  
+		 })
+	   
+	})
+		
+	</script>
+</head> 
+
+<body> 
+
+<!-- Start of first page -->
+<div data-role="page" id="login" data-theme="f">
+	<div data-role="header" data-theme="f">
+    	<div class="logo"></div>
+    </div>
+    
+	<div data-role="content">
+    
+            <form action="../mobile/servlet/forwarder" method="post" name="loginForm" id="loginForm">
+	            <div style="margin: 0 5%;">
+                	<div class="warning-bar">
+                    	<p id="warning-text">E-mailadres en/of wachtwoord klopt niet. Probeer het nog eens.</p>
+                    </div>
+                    
+	            	<div data-role="fieldcontain" class="ui-hide-label">
+	                    <label for="username">e-mailadres</label>
+	                    <input type="email" name="username" id="username" value="" placeholder="e-mailadres"/>
+	                </div>
+	                <div data-role="fieldcontain" class="ui-hide-label">
+	                    <label for="password">wachtwoord</label>
+	                    <input type="password" name="password" id="password" value="" placeholder="wachtwoord"/>
+	                </div>
+	                
+	                <div data-role="fieldcontain">
+	                	 <input type="submit" data-role="button" data-inline="true" style="margin-left: 0;" value="Aanmelden"/>
+	                </div>
+	            </div>
+            </form>
+        
+	</div><!-- /content -->
+    
+</div><!-- /page -->
+
+
+<!-- Main page - thermostat -->
+<div data-role="page" id="main" data-theme="f">
+	<div data-role="header" data-theme="f">
+    	<div class="logo"></div>
+    </div>
+    
+	<div data-role="content">
+    
+    	<fieldset data-role="controlgroup">
+        	<!--<table id="controlpanel" cellspacing="0">-->
+        	<table id="controlpanel">
+            	<tr>
+                	<td rowspan="2" class="ui-corner-tl">
+                    	<span id="flame" class="on"></span>
+                    	<div id="cur_temp">-,-&#x00B0;</div>
+                    </td>
+                    <td class="tempButton ui-corner-tr">
+                    	<button type="button" id="plus" onClick="changeTemp(50)">+</button>
+                    </td>
+                </tr>
+                <tr>
+                	<td class="tempButton bottom">
+                    	<button type="button" id="minus" onClick="changeTemp(-50)">-</button>
+                    </td>
+                </tr>
+                <tr>
+                	<td id="info_line" class="ui-corner-bl">Continu op Comfort</td>
+                    <td id="set_temp" class="ui-corner-br">-,-&#x00B0;</td>
+                </tr>
+            </table>
+            
+            <!--<table id="modes" cellspacing="0">-->
+            <table id="modes" class="">
+            	<tr>
+                	<td class="tempButton ui-corner-tl">
+                    	<a id="state_3" href="javascript:setProgramState(3)" data-role="button" class="">
+                    		<div class="mode-title">Away</div>
+                    		<div class="mode-temp" id="modeTemp-3">12,0&#x00B0;</div>
+                        </a>
+                    </td>
+                    <td class="tempButton ui-corner-tr" style="border-left:none;">
+                        <a id="state_1" href="javascript:setProgramState(1)" data-role="button" class=""><!-- class="ui-btn-sel">-->
+                        	<div class="mode-title">At home</div>
+                    		<div class="mode-temp" id="modeTemp-1">18,0&#x00B0;</div>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                	<td class="tempButton ui-corner-bl" style="border-top:none;">
+                    	<a id="state_2" href="javascript:setProgramState(2)" data-role="button" class="">
+                    		<div class="mode-title" style="padding-left: 8px;">Sleeping</div>
+                    		<div class="mode-temp" id="modeTemp-2">15,0&#x00B0;</div>
+                        </a>
+                    </td>
+                    <td class="tempButton ui-corner-br" style="border-left:none; border-top:none;">
+                    	<a id="state_0" href="javascript:setProgramState(0)" data-role="button" class="">
+                        	<div class="mode-title" style="padding-left: 8px;">Comfort</div>
+                    		<div class="mode-temp" id="modeTemp-0">20,0&#x00B0;</div>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            
+        </fieldset>
+        
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="f">
+    
+    	<div data-role="navbar">
+        	<ul>
+            	<li class="dot active"></li>
+                <li class="dot"></li>
+            </ul>
+        </div>
+        
+    </div>
+    
+</div><!-- /page -->
+
+<!-- page - consumption -->
+<div data-role="page" id="consum" data-theme="f">
+	<div data-role="header" data-theme="f">
+    	<div class="logo"></div>
+    </div>
+    
+	<div data-role="content">
+        <fieldset id="power">
+        	<div class="usage-title">Power</div>         	
+            <div class="usage-bar">
+            	<div id="power_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="power_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_power" class="usage-value">-</span>
+                <span class="usage-unit">Watt</span>
+            </div>
+        </fieldset>
+        
+        <fieldset id="gas">
+        	<div class="usage-title">Gas</div>         	
+            <div class="usage-bar">
+            	<div id="gas_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_gas" class="usage-value">-</span>
+                <span class="usage-unit">liter/hour</span>
+            </div>
+        </fieldset>
+        
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="f">
+    
+    	<div data-role="navbar">
+        	<ul>
+            	<li class="dot"></li>
+                <li class="dot active"></li>
+            </ul>
+        </div>
+        
+    </div>
+    
+</div><!-- /page -->
+
+</body>
+</html>

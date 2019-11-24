@@ -1,0 +1,311 @@
+/* jQuery defaults adjusted
+ And new styles added.
+-----------------------------------------------------------------------------------------------------------*/
+.ui-page {
+    backface-visibility:hidden;
+	-webkit-backface-visibility:hidden; /* Chrome and Safari */
+	-moz-backface-visibility:hidden; /* Firefox */
+}
+#login.ui-page {		
+	position: static;		/*Needed for weird problem that Android input fields doubles when they are stacked in a div with position absolute and has page transistions.*/
+}
+
+/* -- Header & Footer -- */
+.ui-mobile-viewport-transitioning .ui-footer {
+	visibility: hidden;
+}
+
+.ui-header {
+	border: none;
+	background: transparent;
+}
+.ui-header .logo {
+	background: url(images/logo.png) no-repeat;	
+	display: block;
+	height: 25px;
+	margin: 10px 0 10px 15px;
+} 
+
+.ui-page .ui-footer {
+	padding: 3px;
+	background: rgba(247,247,247,0.75);		/*opacity was 0.75*/
+	border: none;
+}
+
+.ui-footer .ui-navbar {
+	float: left;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+}
+.ui-footer .ui-navbar ul {
+	clear: left;
+	float: left;
+	position: relative;
+	left: 50%;
+	text-align: center;
+}
+.ui-footer .ui-navbar ul .dot {
+	display: block;
+	float: left;
+	right: 50%;
+	background-color: #D7D7D7;
+	height: 10px;
+	width: 10px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	margin: 3px;
+	float:left;
+}
+.ui-footer .ui-navbar ul .dot.active {
+	background-color: #00aeef;
+}
+
+
+/* -- General -- */
+.ui-corner-all, .ui-btn-corner-all {
+	-moz-border-radius: 0.4em;
+	-webkit-border-radius: 0.4em;
+	border-radius: 0.4em;
+}
+.ui-btn-corner-all {
+	-moz-border-radius: 0.6em;
+	-webkit-border-radius: 0.6em;
+	border-radius: 0.6em;
+}
+.ui-content {
+	margin: 0 10% 10px;
+	padding: 0;
+	font-weight: normal;
+}
+
+.ui-focus {
+	-moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+}
+.ui-header .ui-title, .ui-footer .ui-title {
+	font-size: 18px;
+}
+
+.ui-hide-label input.ui-input-text, .ui-hide-label textarea.ui-input-text, .ui-hide-label .ui-input-search {
+    border: none;
+}
+
+.ui-field-contain {
+	border: none;
+	padding: 0.4em 0;
+	margin: 0.4em 0;
+/*	transform: translate3d(0,0,0);
+	-webkit-transform: translate3d(0,0,0);
+	-moz-transform: translate3d(0,0,0);*/
+}
+
+fieldset.ui-controlgroup {
+	margin: 0;
+}
+
+
+/* -- Warning bar -- */
+.warning-bar {
+	display: block;
+	padding: 0.6em 0.4em;
+	background: #fffbbf;
+	border: 1px solid #f5d100;
+	-moz-border-radius: 1.0em;
+	-webkit-border-radius: 1.0em;
+	border-radius: 1.0em;
+	color: #666666;
+	margin-bottom: 1.3em;
+	width: 97%;
+	display: none;
+}
+.warning-bar p {
+	padding: 0 0.9em;
+	margin: 0;
+}
+
+
+/* -- Elements-- */
+table#controlpanel, table#modes {
+	border-spacing: 0px;
+	overflow: hidden;
+	position:relative;
+	min-width: 250px;
+	width: 48%;
+	height: 163px;
+	float: left;
+}
+
+table#controlpanel {
+	margin-right: 4%;
+}
+table#modes {
+	
+}
+
+table .tempButton {
+	border: 1px solid #D7D7D7;
+	min-width: 60px;
+	padding: 0;
+	width: 50%;
+}
+table .tempButton.bottom {
+	border-top: none;
+}
+table .tempButton .ui-btn {
+	box-shadow:none;
+	margin: 0;
+	border: none;
+	-moz-border-radius: 				   inherit;
+	-webkit-border-radius: 				   inherit;
+	border-radius: 						   inherit;
+}
+
+/*Contronpanel*/
+table#controlpanel .tempButton {
+	height: 60px;
+	width: 35%;
+}
+table#controlpanel .tempButton .ui-btn {
+	height: 60px;
+}
+table#controlpanel .tempButton .ui-btn-text {
+	font-size: 2em;
+}
+table#controlpanel #info {
+	text-align: center;
+}
+table#controlpanel #set_temp {
+	/*height: 40px;*/
+	background: url(images/arrow.png) left center no-repeat;
+	text-align: center;
+}
+
+table#controlpanel div#cur_temp {
+	font-size: 2.8em;
+	text-align: center;
+}
+table#controlpanel .ui-corner-tl{
+	border-left: 1px solid #D7D7D7;
+	border-top: 1px solid #D7D7D7;
+	border-bottom: 1px solid #D7D7D7;
+}
+table#controlpanel .ui-corner-bl {
+	border-left: 1px solid #D7D7D7;
+	border-bottom: 1px solid #D7D7D7;
+	text-align: center;
+	font-size: 0.9em;
+}
+table#controlpanel .ui-corner-br {
+	border-right: 1px solid #D7D7D7;
+	border-bottom: 1px solid #D7D7D7;
+}
+table#controlpanel #flame {
+	display: block;
+	height: 34px;
+	width: 32px;
+	position: absolute;
+	top: 10px;
+	right: 35%;
+}
+table#controlpanel #flame.on {
+	background: url(images/flame.png) no-repeat;
+}
+table#controlpanel #flame.tap {
+	background: url(images/flameTap.png) no-repeat;
+}
+table#controlpanel #flame.error {
+	background: url(images/flameError.png) no-repeat;
+	margin-right:10px;
+}
+
+/*Modes*/
+table#modes .tempButton .ui-btn {
+	height: 80px;		
+}
+table#modes .tempButton .ui-btn .ui-btn-inner {
+	padding: 20px 0 0;
+	background: none;
+}
+table#modes.program .tempButton .ui-btn.ui-btn-sel .ui-btn-inner {
+	background: url(images/lock_open.png) no-repeat 8% 18px;
+}
+table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
+	background: url(images/lock_closed.png) no-repeat 8% 18px;
+}
+	
+
+/*Usage*/
+.usage-title {
+	padding: 4px 0 16px 26px;
+}
+#power .usage-title {
+	background: url(images/power-ico.png) 2px top no-repeat;
+	margin-top: 15px;
+}
+#gas .usage-title {
+	background: url(images/gas-ico.png) 2px top no-repeat;
+	margin-top: 30px;
+}
+.usage-bar .usage-bar-block {
+	display: block;
+	float: left;
+	height: 22px;
+	width: 4.5%;
+	margin: 1px;
+	background-color: #ededed;
+}
+.usage {
+	text-align: right;
+}
+.usage .usage-value {
+	font-size: 1.3em;
+}
+.usage .usage-unit {
+
+}
+
+
+/* -- Adjustmends voor different sizes -- */
+@media screen and (orientation:landscape) and (max-width: 700px) {
+	.ui-content {
+		margin: 0 5% 10px;
+   }	
+}
+@media screen and (min-width: 700px) {
+	.ui-content {
+		margin: 0 20% 10px;
+   }
+   table#controlpanel #flame {
+		right: 35%;   
+   }
+}
+@media screen and (orientation:portrait) {
+   /* Portrait styles here */
+   
+   table#controlpanel, table#modes {
+		width: 100%;
+		clear: both;
+   }
+   
+   table#controlpanel {
+		margin-right: 0;
+		height: 143px;
+	}
+	table#modes {
+		margin-top: 30px;
+	}
+	
+	table#controlpanel .tempButton {
+		height: 50px;
+	}
+	table#controlpanel .tempButton .ui-btn {
+		height: 50px;
+	}
+	
+	table#controlpanel .tempButton .ui-btn .ui-btn-inner {
+		padding: 0.4em 25px;
+	}
+}
