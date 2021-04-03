@@ -167,7 +167,7 @@
     
 	<div data-role="content">
         <fieldset id="power">
-        	<div class="usage-title">Power</div>         	
+        	<div class="usage-title">Verbruik Huidig</div>         	
             <div class="usage-bar">
             	<div id="power_block-0" class="usage-bar-block ui-corner-all"></div>
                 <div id="power_block-1" class="usage-bar-block ui-corner-all"></div>
@@ -185,29 +185,89 @@
                 <span class="usage-unit">Watt</span>
             </div>
         </fieldset>
-        
-        <fieldset id="gas">
-        	<div class="usage-title">Gas</div>         	
+		
+        <fieldset id="elecNT">
+        	<div class="usage-title">Verbruik Vandaag</div>         	
             <div class="usage-bar">
-            	<div id="gas_block-0" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-1" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-2" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-3" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-4" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-5" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-6" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-7" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-8" class="usage-bar-block ui-corner-all"></div>
-                <div id="gas_block-9" class="usage-bar-block ui-corner-all"></div>
+            	<div id="elecNT_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="elecNT_block-9" class="usage-bar-block ui-corner-all"></div>
             </div>
             <div class="usage">
-            	<span id="cur_gas" class="usage-value">-</span>
-                <span class="usage-unit">m3 vandaag</span>
+            	<span id="cur_elecNT" class="usage-value">-</span>
+                <span class="usage-unit">kWh</span>
+            </div>
+        </fieldset>
+		
+		<fieldset id="produflow">
+        	<div class="usage-title">Teruglevering Huidig</div>         	
+            <div class="usage-bar">
+            	<div id="produflow_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="produflow_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_produflow" class="usage-value">-</span>
+                <span class="usage-unit">Watt</span>
+            </div>
+        </fieldset>
+		
+		<fieldset id="produNT">
+        	<div class="usage-title">Teruglevering Vandaag</div>         	
+            <div class="usage-bar">
+            	<div id="produNT_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="produNT_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_produNT" class="usage-value">-</span>
+                <span class="usage-unit">kWh</span>
+            </div>
+        </fieldset>
+        
+		<fieldset id="solarflow">
+        	<div class="usage-title">Zon Huidig</div>         	
+            <div class="usage-bar">
+            	<div id="solarflow_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="solarflow_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_solarflow" class="usage-value">-</span>
+                <span class="usage-unit">Watt</span>
             </div>
         </fieldset>
 
 	<fieldset id="solar">
-        	<div class="usage-title">Solar</div>         	
+        	<div class="usage-title">Zon Vandaag</div>         	
             <div class="usage-bar">
             	<div id="solar_block-0" class="usage-bar-block ui-corner-all"></div>
                 <div id="solar_block-1" class="usage-bar-block ui-corner-all"></div>
@@ -222,12 +282,53 @@
             </div>
             <div class="usage">
             	<span id="cur_solar" class="usage-value">-</span>
-                <span class="usage-unit">kWh vandaag</span>
+                <span class="usage-unit">kWh</span>
+            </div>
+        </fieldset>
+		
+
+		<fieldset id="gas">
+        	<div class="usage-title">Gas Vandaag</div>         	
+            <div class="usage-bar">
+            	<div id="gas_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="gas_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_gas" class="usage-value">-</span>
+                <span class="usage-unit">m3</span>
+            </div>
+        </fieldset>
+		
+		<fieldset id="waterflow">
+        	<div class="usage-title">Water Huidig</div>         	
+            <div class="usage-bar">
+            	<div id="waterflow_block-0" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-1" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-2" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-3" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-4" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-5" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-6" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-7" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-8" class="usage-bar-block ui-corner-all"></div>
+                <div id="waterflow_block-9" class="usage-bar-block ui-corner-all"></div>
+            </div>
+            <div class="usage">
+            	<span id="cur_waterflow" class="usage-value">-</span>
+                <span class="usage-unit">liter/minuut</span>
             </div>
         </fieldset>
 		
 	<fieldset id="water">
-        	<div class="usage-title">Water</div>         	
+        	<div class="usage-title">Water Vandaag</div>         	
             <div class="usage-bar">
             	<div id="water_block-0" class="usage-bar-block ui-corner-all"></div>
                 <div id="water_block-1" class="usage-bar-block ui-corner-all"></div>
@@ -242,7 +343,7 @@
             </div>
             <div class="usage">
             	<span id="cur_water" class="usage-value">-</span>
-                <span class="usage-unit">liter vandaag</span>
+                <span class="usage-unit">liter</span>
             </div>
         </fieldset>
 
