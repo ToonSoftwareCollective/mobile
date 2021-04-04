@@ -791,7 +791,7 @@ function handleWaterusageInfo(data)
 		}
 	}
 	$average = Math.round(($end-$start)/(($endindex-$startindex)/24));
-	console.log($average);
+	//console.log($average);
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
 }
