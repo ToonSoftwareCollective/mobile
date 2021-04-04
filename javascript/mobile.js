@@ -593,8 +593,8 @@ function handleElecLTInfo(data)
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	elecTotalToday = $value1 - $value2;
+	if (isNaN(elecTotalToday))elecTotalToday = 0;
 	elecTotalAVG = $average;
-	//setUsageInfo("elecLT", Math.round(($value1 - $value2)/10) / 100 , $average );
 	getElecNTInfo(elecTotalToday, elecTotalAVG);
 }
 
@@ -616,7 +616,9 @@ function handleElecNTInfo(data)
 		}
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
-	elecTotalToday = elecTotalToday + ($value1 - $value2) ;
+	var electic2 = $value1 - $value2;
+	if (isNaN(electic2))electic2 = 0;
+	elecTotalToday = elecTotalToday + electic2 ;
 	elecTotalAVG =  Math.max(elecTotalAVG,$average);
 	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG );
 	elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
@@ -687,6 +689,7 @@ function handleProduFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
+	if (isNaN($current))$current = 0;
 	setUsageInfo("produflow", $current , $max );
 	solarInfoT = setTimeout("getProduFlowInfo()", 10000);
 }
@@ -711,6 +714,7 @@ function handleProduLTInfo(data)
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	produTotalToday = $value1 - $value2;
+	if (isNaN(produTotalToday))produTotalToday = 0;
 	produTotalAVG = $average;
 	getProduNTInfo();
 }
@@ -732,9 +736,10 @@ function handleProduNTInfo(data)
 			}
 		}
 	}
-
 	$average = Math.round(($total/$numberofitems)/1000);
-	produTotalToday = produTotalToday + ($value1 - $value2) ;
+	var produ2 = $value1 - $value2;
+	if (isNaN(produ2))produ2 = 0;
+	produTotalToday = produTotalToday + produ2 ;
 	produTotalAVG  =  Math.max(produTotalAVG ,$average);
 	setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
@@ -752,6 +757,7 @@ function handleWaterFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
+	if (isNaN($current))$current = 0;
 	setUsageInfo("waterflow", $current , $max/3 );
 	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
@@ -792,7 +798,6 @@ function handleWaterusageInfo(data)
 		}
 	}
 	$average = Math.round(($end-$start)/(($endindex-$startindex)/24));
-	//console.log($average);
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
 }
