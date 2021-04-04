@@ -648,6 +648,7 @@ function handleSolarFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
+	if (isNaN($current))$current = 0;
 	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
 }
