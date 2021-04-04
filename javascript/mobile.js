@@ -107,9 +107,28 @@ function initPage()
 function logout()
 {
 	clearTimeout(pwrusageInfoT);
+	clearTimeout(elecLTInfoT);
+	clearTimeout(elecLTInfoT);
+	clearTimeout(gasusageInfoT);
+	clearTimeout(solarInfoT);
+	clearTimeout(solarFlowInfoT);
+	clearTimeout(produFlowInfoT);
+	clearTimeout(produNTInfoT);
+	clearTimeout(pwrusageInfoT);
+	clearTimeout(waterFlowInfoT);
+	
 	pwrusageInfoT = null;
+	elecLTInfoT = null;
+	elecNTInfoT = null;
+	gasusageInfoT = null;
 	solarInfoT = null;
+	solarFlowInfoT = null;
+	produFlowInfoT = null;
+	produLTInfoT = null;
+	produNTInfoT = null;
 	waterusageInfoT = null;
+	waterFlowInfoT = null;
+
 	clearTimeout(setTempT);	
 	setTempT = null;
 	clearTimeout(thermstatInfoT);	
@@ -144,12 +163,7 @@ function usagePageLoaded()
 {
 	getPwrusageInfo();
 	getElecLTInfo();
-	//getElecNTInfo();
 	getGasusageInfo();
-	getSolarInfo();
-	getSolarFlowInfo();
-	getProduFlowInfo();
-	getProduLTInfo();
 	getWaterusageInfo();
 	getWaterFlowInfo();
 }
@@ -158,7 +172,37 @@ function usagePageHidden()
 {
 	if(pwrusageInfoT != null)
 		clearTimeout(pwrusageInfoT);
+	if(getElecLTInfo != null)
+		clearTimeout(getElecLTInfo);
+	if(getGasusageInfo != null)
+		clearTimeout(getGasusageInfo);
+	if(getWaterusageInfo != null)
+		clearTimeout(getWaterusageInfo);
+	if(getWaterFlowInfo != null)
+		clearTimeout(getWaterFlowInfo);
 }
+
+
+function solarPageLoaded()
+{
+	getSolarInfo();
+	getSolarFlowInfo();
+	getProduFlowInfo();
+	getProduLTInfo();
+}
+
+function solarPageHidden()
+{
+	if(getSolarInfo() != null)
+		clearTimeout(getSolarInfo());
+	if(getSolarFlowInfo != null)
+		clearTimeout(getSolarFlowInfo);
+	if(getProduFlowInfo != null)
+		clearTimeout(getProduFlowInfo);
+	if(getProduLTInfo != null)
+		clearTimeout(getProduLTInfo);
+}
+
 
 function setTempToDiv(divId, temp)
 {
@@ -550,8 +594,6 @@ function handleElecLTInfo(data)
 	$average = Math.round(($total/$numberofitems)/1000);
 	elecTotalToday = $value1 - $value2;
 	elecTotalAVG = $average;
-	console.log("tot elec LT: " + elecTotalToday);
-	console.log("gem elec LT: " + elecTotalAVG);
 	//setUsageInfo("elecLT", Math.round(($value1 - $value2)/10) / 100 , $average );
 	getElecNTInfo(elecTotalToday, elecTotalAVG);
 }
@@ -606,7 +648,7 @@ function handleSolarFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
-	setUsageInfo("solarflow", $current , $max );
+	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
 }
 
@@ -669,8 +711,6 @@ function handleProduLTInfo(data)
 	$average = Math.round(($total/$numberofitems)/1000);
 	produTotalToday = $value1 - $value2;
 	produTotalAVG = $average;
-	console.log("tot produ LT: " + produTotalToday);
-	console.log("gem produ LT: " + produTotalAVG);
 	getProduNTInfo();
 }
 
@@ -691,14 +731,10 @@ function handleProduNTInfo(data)
 			}
 		}
 	}
-	console.log("tot produ LT2: " + produTotalToday);
-	console.log("gem produ LT2: " + produTotalAVG);
-	
+
 	$average = Math.round(($total/$numberofitems)/1000);
 	produTotalToday = produTotalToday + ($value1 - $value2) ;
 	produTotalAVG  =  Math.max(produTotalAVG ,$average);
-	console.log("tot produ LT3: " + produTotalToday);
-	console.log("gem produ LT3: " + produTotalAVG);
 	setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
@@ -715,8 +751,8 @@ function handleWaterFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
-	setUsageInfo("waterflow", $current , $max );
-	waterInfoT = setTimeout("getWaterFlowInfo()", 10000);
+	setUsageInfo("waterflow", $current , $max/3 );
+	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
 
 function handleWaterusageInfo(data)
@@ -745,14 +781,17 @@ function handleWaterusageInfo(data)
 				}	
 		}
 		if (i>96){
-			if (data[$key] != -1 && data[$key] != null){
-				if ($value2 == -1) $value2 = data[$key];
+			if (data[$key] != -1 && data[$key] != null && data[$key] > $value1){
+				if ($value2 == -1) {
+					$value2 = data[$key];
+				}
+				
 				$value1 = data[$key];
 			}
 		}
 	}
-
 	$average = Math.round(($end-$start)/(($endindex-$startindex)/24));
+	console.log($average);
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
 }
@@ -877,7 +916,7 @@ function getWaterusageInfo()
 		clearTimeout(waterusageInfoT);
 		var $date = new Date();
 		$date.setDate($date.getDate()-5);
-		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";		
 	$.getJSON( WATERUSAGE_INFO_URL + $yesterday, handleWaterusageInfo);
 }
 
