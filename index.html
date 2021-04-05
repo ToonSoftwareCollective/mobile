@@ -37,7 +37,12 @@
 		   $.mobile.changePage("#consum", { transition: "slide"} ); 
 		   })      
 	    $("#consum").bind('swipeleft',function(event, ui){ 
-		   $.mobile.changePage("#solar", { transition: "slide"} );  
+			if (solarAvailable == 1){
+				$.mobile.changePage("#solar", { transition: "slide"} ); 
+			}
+			else{
+			 $.mobile.changePage("#main", { transition: "slide"} ); 
+			}
 		  })
 		$("#solar").bind('swipeleft',function(event, ui){ 
 		   $.mobile.changePage("#main", { transition: "slide"} );  
@@ -48,8 +53,13 @@
 		$("#consum").bind('swiperight',function(event, ui){ 
 		   $.mobile.changePage("#main", { transition: "reverse slide"} );  
 		   })
-		$("#main").bind('swiperight',function(event, ui){ 
-		   $.mobile.changePage("#solar", { transition: "reverse slide"} );  
+		$("#main").bind('swiperight',function(event, ui){
+			if (solarAvailable == 1){
+				$.mobile.changePage("#solar", { transition: "reverse slide"} ); 
+			}
+			else{
+				$.mobile.changePage("#consum", { transition: "reverse slide"} ); 
+			}
 		   })
 	})
 		
@@ -164,9 +174,9 @@
     
     	<div data-role="navbar">
         	<ul>
-            	<li class="dot active"></li>
-                <li class="dot"></li>
-				<li class="dot"></li>
+            	<li class="dot active" id="dot_11"></li>
+                <li class="dot" id="dot_12"></li>
+				<li class="dot" id="dot_13"></li>
             </ul>
         </div>
         
@@ -290,9 +300,9 @@
     
     	<div data-role="navbar">
         	<ul>
-            	<li class="dot"></li>
-				<li class="dot active"></li>
-                <li class="dot"></li>
+            	<li class="dot" id="dot_21"></li>
+                <li class="dot active" id="dot_22"></li>
+				<li class="dot" id="dot_23"></li>
             </ul>
         </div>
         
@@ -307,98 +317,97 @@
 	<div data-role="header" data-theme="f">
     	<div class="logo"></div>
     </div>
-    
 	<div data-role="content">
-        		<fieldset id="produflow">
-        	<div class="usage-title">Teruglevering Huidig</div>         	
-            <div class="usage-bar">
-            	<div id="produflow_block-0" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-1" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-2" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-3" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-4" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-5" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-6" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-7" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-8" class="usage-bar-block ui-corner-all"></div>
-                <div id="produflow_block-9" class="usage-bar-block ui-corner-all"></div>
-            </div>
-            <div class="usage">
-            	<span id="cur_produflow" class="usage-value">-</span>
-                <span class="usage-unit">Watt</span>
-            </div>
-        </fieldset>
+		<fieldset id="produflow">
+			<div class="usage-title">Teruglevering Huidig</div>         	
+			<div class="usage-bar">
+				<div id="produflow_block-0" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-1" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-2" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-3" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-4" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-5" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-6" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-7" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-8" class="usage-bar-block ui-corner-all"></div>
+				<div id="produflow_block-9" class="usage-bar-block ui-corner-all"></div>
+			</div>
+			<div class="usage">
+				<span id="cur_produflow" class="usage-value">-</span>
+				<span class="usage-unit">Watt</span>
+			</div>
+		</fieldset>
 		
 		<fieldset id="produNT">
-        	<div class="usage-title">Teruglevering Vandaag</div>         	
-            <div class="usage-bar">
-            	<div id="produNT_block-0" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-1" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-2" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-3" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-4" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-5" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-6" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-7" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-8" class="usage-bar-block ui-corner-all"></div>
-                <div id="produNT_block-9" class="usage-bar-block ui-corner-all"></div>
-            </div>
-            <div class="usage">
-            	<span id="cur_produNT" class="usage-value">-</span>
-                <span class="usage-unit">kWh</span>
-            </div>
-        </fieldset>
-        
+			<div class="usage-title">Teruglevering Vandaag</div>         	
+			<div class="usage-bar">
+				<div id="produNT_block-0" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-1" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-2" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-3" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-4" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-5" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-6" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-7" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-8" class="usage-bar-block ui-corner-all"></div>
+				<div id="produNT_block-9" class="usage-bar-block ui-corner-all"></div>
+			</div>
+			<div class="usage">
+				<span id="cur_produNT" class="usage-value">-</span>
+				<span class="usage-unit">kWh</span>
+			</div>
+		</fieldset>
+		
 		<fieldset id="solarflow">
-        	<div class="usage-title">Zon Huidig</div>         	
-            <div class="usage-bar">
-            	<div id="solarflow_block-0" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-1" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-2" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-3" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-4" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-5" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-6" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-7" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-8" class="usage-bar-block ui-corner-all"></div>
-                <div id="solarflow_block-9" class="usage-bar-block ui-corner-all"></div>
-            </div>
-            <div class="usage">
-            	<span id="cur_solarflow" class="usage-value">-</span>
-                <span class="usage-unit">Watt</span>
-            </div>
-        </fieldset>
+			<div class="usage-title">Zon Huidig</div>         	
+			<div class="usage-bar">
+				<div id="solarflow_block-0" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-1" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-2" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-3" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-4" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-5" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-6" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-7" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-8" class="usage-bar-block ui-corner-all"></div>
+				<div id="solarflow_block-9" class="usage-bar-block ui-corner-all"></div>
+			</div>
+			<div class="usage">
+				<span id="cur_solarflow" class="usage-value">-</span>
+				<span class="usage-unit">Watt</span>
+			</div>
+		</fieldset>
 
 	<fieldset id="solar">
-        	<div class="usage-title">Zon Vandaag</div>         	
-            <div class="usage-bar">
-            	<div id="solar_block-0" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-1" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-2" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-3" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-4" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-5" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-6" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-7" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-8" class="usage-bar-block ui-corner-all"></div>
-                <div id="solar_block-9" class="usage-bar-block ui-corner-all"></div>
-            </div>
-            <div class="usage">
-            	<span id="cur_solar" class="usage-value">-</span>
-                <span class="usage-unit">kWh</span>
-            </div>
-        </fieldset>
+			<div class="usage-title">Zon Vandaag</div>         	
+			<div class="usage-bar">
+				<div id="solar_block-0" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-1" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-2" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-3" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-4" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-5" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-6" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-7" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-8" class="usage-bar-block ui-corner-all"></div>
+				<div id="solar_block-9" class="usage-bar-block ui-corner-all"></div>
+			</div>
+			<div class="usage">
+				<span id="cur_solar" class="usage-value">-</span>
+				<span class="usage-unit">kWh</span>
+			</div>
+		</fieldset>
 
-        
+		
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed" data-theme="f">
     
     	<div data-role="navbar">
         	<ul>
-            	<li class="dot"></li>
-				<li class="dot"></li>
-                <li class="dot active"></li>
+				<li class="dot" id="dot_31"></li>
+                <li class="dot" id="dot_32"></li>
+				<li class="dot active" id="dot_33"></li>
             </ul>
         </div>
         

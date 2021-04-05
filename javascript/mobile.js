@@ -21,6 +21,8 @@ var elecTotalAVG = 0;
 var produTotalToday = 0;
 var produTotalAVG = 0;
 
+var solarAvailable = 1;
+
 
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
@@ -73,10 +75,13 @@ var programState = 0;
 function initPage()
 {
 	$.hcb.translatePage();
+	
+	console.log("initpage called");
 		
 	//If we are local we don't need to login
 	if(jQuery.hcb.proxy.supported == false)
-	{
+	{	
+		getSolarFlowInfo();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -150,7 +155,7 @@ function login()
 function mainPageLoaded()
 {
 	getThermostatStates();
-	getThermostatInfo()
+	getThermostatInfo();
 }
 
 function mainPageHidden()
@@ -591,7 +596,7 @@ function handleElecLTInfo(data)
 			}
 		}
 	}
-	$average = Math.round(($total/$numberofitems)/1000);
+	$average = Math.round($total/$numberofitems);
 	elecTotalToday = $value1 - $value2;
 	if (isNaN(elecTotalToday))elecTotalToday = 0;
 	elecTotalAVG = $average;
@@ -615,12 +620,20 @@ function handleElecNTInfo(data)
 			}
 		}
 	}
-	$average = Math.round(($total/$numberofitems)/1000);
+	$average = Math.round($total/$numberofitems);
+	
+	console.log("avg1: " + elecTotalAVG);
+	console.log("avg2: " + $average);
+	
+	
 	var electic2 = $value1 - $value2;
 	if (isNaN(electic2))electic2 = 0;
 	elecTotalToday = elecTotalToday + electic2 ;
 	elecTotalAVG =  Math.max(elecTotalAVG,$average);
-	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG );
+	
+	console.log("avg selected: " + elecTotalAVG);
+	
+	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG/1000 );
 	elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
 }
 
@@ -650,7 +663,23 @@ function handleSolarFlowInfo(data)
 			$current = data[$key] ;
 		}
 	}
-	if (isNaN($current))$current = 0;
+	if (isNaN($current)){
+			$current = 0;
+			solarAvailable = 0;
+			//$("#solarAvail").html("solar niet gevonden");
+			//$('#solarFields').hide();
+			$('#dot_13').hide();
+			$('#dot_23').hide();
+			$('#dot_33').hide();
+		}
+		else{
+			solarAvailable = 1;
+			//$("#solarAvail").html("solar gevonden");
+			//$('#solarFields').show();
+			$('#dot_13').show();
+			$('#dot_23').show();
+			$('#dot_33').show();
+		}
 	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
 }
@@ -712,7 +741,7 @@ function handleProduLTInfo(data)
 			}
 		}
 	}
-	$average = Math.round(($total/$numberofitems)/1000);
+	$average = Math.round($total/$numberofitems);
 	produTotalToday = $value1 - $value2;
 	if (isNaN(produTotalToday))produTotalToday = 0;
 	produTotalAVG = $average;
@@ -736,7 +765,8 @@ function handleProduNTInfo(data)
 			}
 		}
 	}
-	$average = Math.round(($total/$numberofitems)/1000);
+	
+	$average = Math.round($total/$numberofitems);
 	var produ2 = $value1 - $value2;
 	if (isNaN(produ2))produ2 = 0;
 	produTotalToday = produTotalToday + produ2 ;
