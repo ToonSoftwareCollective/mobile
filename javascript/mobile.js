@@ -15,23 +15,54 @@ var STATE_SLEEP 			= 2;
 var STATE_AWAY 				= 3;
 var STATE_HOLIDAY			= 4;
 
+var elecTotalToday = 0;
+var elecTotalAVG = 0;
+
+var produTotalToday = 0;
+var produTotalAVG = 0;
+
+var solarAvailable = 1;
+
+
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
+
+var ELEC_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+var ELEC_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+
 var GASUSAGE_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=gas_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
-//var SOLAR_INFO_URL = "solar_mobile.json";
+
 var SOLAR_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+var SOLARFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
+var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
+
+
+var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+
 
 //var WATERUSAGE_INFO_URL =  "water_mobile.json";
 var WATERUSAGE_INFO_URL =  "/hcb_rrd?action=getRrdData&loggerName=water_quantity&rra=10yrhours&readableTime=1&nullForNaN=1&from=";
+var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
+
 
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
 var SET_TARGET_TEMP_URLCTOR				= function(setpoint) { return "/happ_thermstat?action=roomSetpoint&Setpoint=" + setpoint; };
 var thermstatInfoT = null;
 var pwrusageInfoT = null;
+var elecLTInfoT = null;
+var elecNTInfoT = null;
+
 var gasusageInfoT = null;
 var solarInfoT = null;
+var solarFlowInfoT = null;
+var produFlowInfoT = null;
+
+var produLTInfoT = null;
+var produNTInfoT = null;
 var waterusageInfoT = null;
+var waterFlowInfoT = null;
 var setTempT = null;
 
 var userActive = false;
@@ -44,10 +75,13 @@ var programState = 0;
 function initPage()
 {
 	$.hcb.translatePage();
+	
+	console.log("initpage called");
 		
 	//If we are local we don't need to login
 	if(jQuery.hcb.proxy.supported == false)
-	{
+	{	
+		getSolarFlowInfo();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -78,9 +112,28 @@ function initPage()
 function logout()
 {
 	clearTimeout(pwrusageInfoT);
+	clearTimeout(elecLTInfoT);
+	clearTimeout(elecLTInfoT);
+	clearTimeout(gasusageInfoT);
+	clearTimeout(solarInfoT);
+	clearTimeout(solarFlowInfoT);
+	clearTimeout(produFlowInfoT);
+	clearTimeout(produNTInfoT);
+	clearTimeout(pwrusageInfoT);
+	clearTimeout(waterFlowInfoT);
+	
 	pwrusageInfoT = null;
+	elecLTInfoT = null;
+	elecNTInfoT = null;
+	gasusageInfoT = null;
 	solarInfoT = null;
+	solarFlowInfoT = null;
+	produFlowInfoT = null;
+	produLTInfoT = null;
+	produNTInfoT = null;
 	waterusageInfoT = null;
+	waterFlowInfoT = null;
+
 	clearTimeout(setTempT);	
 	setTempT = null;
 	clearTimeout(thermstatInfoT);	
@@ -102,7 +155,7 @@ function login()
 function mainPageLoaded()
 {
 	getThermostatStates();
-	getThermostatInfo()
+	getThermostatInfo();
 }
 
 function mainPageHidden()
@@ -114,16 +167,47 @@ function mainPageHidden()
 function usagePageLoaded()
 {
 	getPwrusageInfo();
+	getElecLTInfo();
 	getGasusageInfo();
-	getSolarInfo();
 	getWaterusageInfo();
+	getWaterFlowInfo();
 }
 
 function usagePageHidden()
 {
 	if(pwrusageInfoT != null)
 		clearTimeout(pwrusageInfoT);
+	if(getElecLTInfo != null)
+		clearTimeout(getElecLTInfo);
+	if(getGasusageInfo != null)
+		clearTimeout(getGasusageInfo);
+	if(getWaterusageInfo != null)
+		clearTimeout(getWaterusageInfo);
+	if(getWaterFlowInfo != null)
+		clearTimeout(getWaterFlowInfo);
 }
+
+
+function solarPageLoaded()
+{
+	getSolarInfo();
+	getSolarFlowInfo();
+	getProduFlowInfo();
+	getProduLTInfo();
+}
+
+function solarPageHidden()
+{
+	if(getSolarInfo() != null)
+		clearTimeout(getSolarInfo());
+	if(getSolarFlowInfo != null)
+		clearTimeout(getSolarFlowInfo);
+	if(getProduFlowInfo != null)
+		clearTimeout(getProduFlowInfo);
+	if(getProduLTInfo != null)
+		clearTimeout(getProduLTInfo);
+}
+
 
 function setTempToDiv(divId, temp)
 {
@@ -399,7 +483,6 @@ var colorArraySolar = ["#ffb789", "#ffa266", "#ff8c42", "#ff761e", "#f96200", "#
 var colorArrayGas = ["#90bd29", "#adc21b", "#cdc21c", "#eac21e", "#fdc221", "#ffb026", "#fa8a2d", "#ec5e35", "#dd353c", "#d6264e"];
 var colorArrayWater = ["#c9f6fe", "#99efff", "#68e8ff", "#37e0ff", "#06d9ff", "#00b4d4", "#008aa3", "#006072", "#003741", "#000d10"];
 
-
 function fillBlockBar(uType, blocksActive)
 {
 	var i;
@@ -411,9 +494,21 @@ function fillBlockBar(uType, blocksActive)
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
+		if (uType == "elecNT"){
+			if(blocksActive > i)
+				$("#"+uType+"_block-"+i).css("background-color", colorArrayPower[i]);
+			else
+				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
+		}
 		if (uType == "gas"){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArrayGas[i]);
+			else
+				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
+		}
+		if (uType == "solarflow"){
+			if(blocksActive > i)
+				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
@@ -423,13 +518,30 @@ function fillBlockBar(uType, blocksActive)
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
+		if (uType == "produflow"){
+			if(blocksActive > i)
+				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
+			else
+				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
+		}
+		if (uType == "produNT"){
+			if(blocksActive > i)
+				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
+			else
+				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
+		}
+		if (uType == "waterflow"){
+			if(blocksActive > i)
+				$("#"+uType+"_block-"+i).css("background-color", colorArrayWater[i]);
+			else
+				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
+		}
 		if (uType == "water"){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArrayWater[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		
 	}
 }
 
@@ -446,7 +558,7 @@ function setUsageInfo(uType, uValue, avgValue)
 	}
 	else
 	{
-		$("#cur_"+uType).html("-");
+		$("#cur_"+uType).html("0");
 		fillBlockBar(uType, 0);
 	}
 }
@@ -466,6 +578,65 @@ function handlePwrusageInfo(data)
 	}
 }
 
+
+function handleElecLTInfo(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+	var $total = 0;
+	var $numberofitems = 0;
+	var $average = 1000;
+	for (var $key in data) {
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = $value1;
+			$value1 = data[$key];
+			if ($value2 != -1 ) {
+				$total = $total + $value1 - $value2;
+				$numberofitems++;
+			}
+		}
+	}
+	$average = Math.round($total/$numberofitems);
+	elecTotalToday = $value1 - $value2;
+	if (isNaN(elecTotalToday))elecTotalToday = 0;
+	elecTotalAVG = $average;
+	getElecNTInfo(elecTotalToday, elecTotalAVG);
+}
+
+function handleElecNTInfo(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+	var $total = 0;
+	var $numberofitems = 0;
+	var $average = 1000;
+	for (var $key in data) {
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = $value1;
+			$value1 = data[$key];
+			if ($value2 != -1 ) {
+				$total = $total + $value1 - $value2;
+				$numberofitems++;
+			}
+		}
+	}
+	$average = Math.round($total/$numberofitems);
+	
+	console.log("avg1: " + elecTotalAVG);
+	console.log("avg2: " + $average);
+	
+	
+	var electic2 = $value1 - $value2;
+	if (isNaN(electic2))electic2 = 0;
+	elecTotalToday = elecTotalToday + electic2 ;
+	elecTotalAVG =  Math.max(elecTotalAVG,$average);
+	
+	console.log("avg selected: " + elecTotalAVG);
+	
+	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG/1000 );
+	elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
+}
+
 function handleGasusageInfo(data)
 {
 	var $value1 = -1;
@@ -480,6 +651,38 @@ function handleGasusageInfo(data)
 	gasusageInfoT = setTimeout("getGasusageInfo()", 10000);
 }
 
+function handleSolarFlowInfo(data)
+{
+	var $current = 0;
+	var $max = 100;
+	var i=0;
+	for (var $key in data) {
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			if($max < data[$key] && i<=288) $max =  data[$key]; //find max value but only yesterday
+			$current = data[$key] ;
+		}
+	}
+	if (isNaN($current)){
+			$current = 0;
+			solarAvailable = 0;
+			//$("#solarAvail").html("solar niet gevonden");
+			//$('#solarFields').hide();
+			$('#dot_13').hide();
+			$('#dot_23').hide();
+			$('#dot_33').hide();
+		}
+		else{
+			solarAvailable = 1;
+			//$("#solarAvail").html("solar gevonden");
+			//$('#solarFields').show();
+			$('#dot_13').show();
+			$('#dot_23').show();
+			$('#dot_33').show();
+		}
+	setUsageInfo("solarflow", $current , $max/3 );
+	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
+}
 
 function handleSolarInfo(data)
 {
@@ -494,13 +697,99 @@ function handleSolarInfo(data)
 			$value1 = data[$key];
 			if ($value2 != -1 ) {
 				$total = $total + $value1 - $value2;
-				$numberofitems = $numberofitems + 1;
+				$numberofitems++;
 			}
 		}
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
 	solarInfoT = setTimeout("getSolarInfo()", 10000);
+}
+
+function handleProduFlowInfo(data)
+{
+	var $current = 0;
+	var $max = 100;
+	var i=0;
+	for (var $key in data) {
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			if($max < data[$key] && i<=288) $max =  data[$key]; //find max value but only yesterday
+			$current = data[$key] ;
+		}
+	}
+	if (isNaN($current))$current = 0;
+	setUsageInfo("produflow", $current , $max );
+	solarInfoT = setTimeout("getProduFlowInfo()", 10000);
+}
+
+
+function handleProduLTInfo(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+	var $total = 0;
+	var $numberofitems = 0;
+	var $average = 1000;
+	for (var $key in data) {
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = $value1;
+			$value1 = data[$key];
+			if ($value2 != -1 ) {
+				$total = $total + $value1 - $value2;
+				$numberofitems++;
+			}
+		}
+	}
+	$average = Math.round($total/$numberofitems);
+	produTotalToday = $value1 - $value2;
+	if (isNaN(produTotalToday))produTotalToday = 0;
+	produTotalAVG = $average;
+	getProduNTInfo();
+}
+
+function handleProduNTInfo(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+	var $total = 0;
+	var $numberofitems = 0;
+	var $average = 1000;
+	for (var $key in data) {
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = $value1;
+			$value1 = data[$key];
+			if ($value2 != -1 ) {
+				$total = $total + $value1 - $value2;
+				$numberofitems++;
+			}
+		}
+	}
+	
+	$average = Math.round($total/$numberofitems);
+	var produ2 = $value1 - $value2;
+	if (isNaN(produ2))produ2 = 0;
+	produTotalToday = produTotalToday + produ2 ;
+	produTotalAVG  =  Math.max(produTotalAVG ,$average);
+	setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
+	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
+}
+
+function handleWaterFlowInfo(data)
+{
+	var $current = 0;
+	var $max = 100;
+	var i=0;
+	for (var $key in data) {
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			if($max < data[$key] && i<=288) $max =  data[$key]; //find max value but only yesterday
+			$current = data[$key] ;
+		}
+	}
+	if (isNaN($current))$current = 0;
+	setUsageInfo("waterflow", $current , $max/3 );
+	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
 
 function handleWaterusageInfo(data)
@@ -529,13 +818,15 @@ function handleWaterusageInfo(data)
 				}	
 		}
 		if (i>96){
-			if (data[$key] != -1 && data[$key] != null){
-				if ($value2 == -1) $value2 = data[$key];
+			if (data[$key] != -1 && data[$key] != null && data[$key] > $value1){
+				if ($value2 == -1) {
+					$value2 = data[$key];
+				}
+				
 				$value1 = data[$key];
 			}
 		}
 	}
-
 	$average = Math.round(($end-$start)/(($endindex-$startindex)/24));
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
@@ -546,10 +837,39 @@ function getPwrusageInfo()
 {
 	if(pwrusageInfoT != null)
 		clearTimeout(pwrusageInfoT);
-
 	$.getJSON( PWRUSAGE_INFO_URL, handlePwrusageInfo);
-	
 }
+
+function getPowerInfo()
+{
+	if(powerInfoT != null)
+		clearTimeout(powerInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-2);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+	$.getJSON( PWRUSAGE_DAY_URL + $yesterday, handlePowerInfo);
+}
+
+function getElecLTInfo()
+{
+	if(elecLTInfoT != null)
+		clearTimeout(elecLTInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-10);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+	$.getJSON( ELEC_INFO_LT_URL + $yesterday, handleElecLTInfo);
+}
+
+function getElecNTInfo()
+{
+	if(elecNTInfoT != null)
+		clearTimeout(elecNTInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-10);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+	$.getJSON( ELEC_INFO_NT_URL + $yesterday, handleElecNTInfo);
+}
+
 
 function getGasusageInfo()
 {
@@ -558,10 +878,21 @@ function getGasusageInfo()
 		var $date = new Date();
 		$date.setDate($date.getDate()-10);
 		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
-
 	$.getJSON( GASUSAGE_INFO_URL + $yesterday, handleGasusageInfo);
 
 }
+
+function getSolarFlowInfo()
+{
+	if(solarFlowInfoT != null)
+		clearTimeout(solarFlowInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-1);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+		//2 days history
+	$.getJSON( SOLARFLOW_INFO_URL + $yesterday, handleSolarFlowInfo);
+}
+
 
 function getSolarInfo()
 {
@@ -571,7 +902,48 @@ function getSolarInfo()
 		$date.setDate($date.getDate()-10);
 		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
 	$.getJSON( SOLAR_INFO_URL + $yesterday, handleSolarInfo);
+}
 
+function getProduFlowInfo()
+{
+	if(produFlowInfoT != null)
+		clearTimeout(produFlowInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-1);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+		//2 days history
+	$.getJSON( PRODUFLOW_INFO_URL + $yesterday, handleProduFlowInfo);
+}
+
+function getProduLTInfo()
+{
+	if(produLTInfoT != null)
+		clearTimeout(produLTInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-10);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+	$.getJSON( PRODU_INFO_LT_URL + $yesterday, handleProduLTInfo);
+}
+
+function getProduNTInfo()
+{
+	if(produNTInfoT != null)
+		clearTimeout(produNTInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-10);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+	$.getJSON( PRODU_INFO_NT_URL + $yesterday, handleProduNTInfo);
+}
+
+function getWaterFlowInfo()
+{
+	if(waterFlowInfoT != null)
+		clearTimeout(waterFlowInfoT);
+		var $date = new Date();
+		$date.setDate($date.getDate()-1);
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear();
+		//2 days history
+	$.getJSON( WATERFLOW_INFO_URL + $yesterday, handleWaterFlowInfo);
 }
 
 function getWaterusageInfo()
@@ -580,7 +952,7 @@ function getWaterusageInfo()
 		clearTimeout(waterusageInfoT);
 		var $date = new Date();
 		$date.setDate($date.getDate()-5);
-		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";
+		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";		
 	$.getJSON( WATERUSAGE_INFO_URL + $yesterday, handleWaterusageInfo);
 }
 
