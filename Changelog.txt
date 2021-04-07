@@ -1,3 +1,6 @@
+1.0.13
+- hide gas and water if devices are not available (data is null) 
+
 1.0.12
 - favico changed
 - apple touch icon changed

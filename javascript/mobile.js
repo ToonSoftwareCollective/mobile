@@ -23,7 +23,6 @@ var produTotalAVG = 0;
 
 var solarAvailable = 1;
 
-
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
 
@@ -76,7 +75,7 @@ function initPage()
 {
 	$.hcb.translatePage();
 	
-	console.log("initpage called");
+	//console.log("initpage called");
 		
 	//If we are local we don't need to login
 	if(jQuery.hcb.proxy.supported == false)
@@ -622,8 +621,8 @@ function handleElecNTInfo(data)
 	}
 	$average = Math.round($total/$numberofitems);
 	
-	console.log("avg1: " + elecTotalAVG);
-	console.log("avg2: " + $average);
+	//console.log("avg1: " + elecTotalAVG);
+	//console.log("avg2: " + $average);
 	
 	
 	var electic2 = $value1 - $value2;
@@ -631,24 +630,10 @@ function handleElecNTInfo(data)
 	elecTotalToday = elecTotalToday + electic2 ;
 	elecTotalAVG =  Math.max(elecTotalAVG,$average);
 	
-	console.log("avg selected: " + elecTotalAVG);
+	//console.log("avg selected: " + elecTotalAVG);
 	
 	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG/1000 );
 	elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
-}
-
-function handleGasusageInfo(data)
-{
-	var $value1 = -1;
-	var $value2 = -1;
-	var $total10days = 0;
-	for (var $key in data) {
-		$value2 = $value1;
-		$value1 = data[$key];
-		if ($value2 != -1) $total10days = $total10days + $value1 - $value2;
-	}
-	setUsageInfo("gas", Math.round(($value1 - $value2)/10) / 100 , $total10days / 10000);
-	gasusageInfoT = setTimeout("getGasusageInfo()", 10000);
 }
 
 function handleSolarFlowInfo(data)
@@ -775,20 +760,53 @@ function handleProduNTInfo(data)
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
 
+function handleGasusageInfo(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+	var $found = "placeholder";
+	var $total10days = 0;
+	for (var $key in data) {
+		if (data[$key] != -1 && data[$key] != null) $found = data[$key];
+		$value2 = $value1;
+		$value1 = data[$key];
+		if ($value2 != -1) $total10days = $total10days + $value1 - $value2;
+	}
+	if (isNaN($found)){
+		$("#gas").hide();
+	}
+	else{
+		$("#gas").show();
+	}
+	setUsageInfo("gas", Math.round(($value1 - $value2)/10) / 100 , $total10days / 10000);
+	gasusageInfoT = setTimeout("getGasusageInfo()", 10000);
+}
+
 function handleWaterFlowInfo(data)
 {
 	var $current = 0;
-	var $max = 100;
+	var $max = "placeholder";
 	var i=0;
 	for (var $key in data) {
 		i++;
 		if (data[$key] != -1 && data[$key] != null) {
-			if($max < data[$key] && i<=288) $max =  data[$key]; //find max value but only yesterday
+			//console.log(data[$key]);
+			if(($max < data[$key] && i<=288) || $max == "placeholder") $max =  data[$key]; //find max value but only yesterday
 			$current = data[$key] ;
 		}
 	}
 	if (isNaN($current))$current = 0;
-	setUsageInfo("waterflow",  Math.round($current/60) , $max/3 );
+	if (isNaN($max)){
+
+		$("#water").hide();
+		$("#waterflow").hide();
+		
+	}
+	else{
+		$("#water").show();
+		$("#waterflow").show();
+	}
+	setUsageInfo("waterflow", Math.round($current/60) , $max/3 );
 	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
 
