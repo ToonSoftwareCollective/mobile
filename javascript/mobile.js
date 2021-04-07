@@ -788,7 +788,7 @@ function handleWaterFlowInfo(data)
 		}
 	}
 	if (isNaN($current))$current = 0;
-	setUsageInfo("waterflow", $current , $max/3 );
+	setUsageInfo("waterflow",  Math.round($current/60) , $max/3 );
 	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
 

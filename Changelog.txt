@@ -1,0 +1,5 @@
+1.0.12
+- favico changed
+- apple touch icon changed
+- water flow changed to liters/minute
+
