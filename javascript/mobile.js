@@ -20,6 +20,8 @@ var elecTotalAVG = 0;
 
 var produTotalToday = 0;
 var produTotalAVG = 0;
+var solarTotalAVG = 0;
+
 
 var solarAvailable = 1;
 
@@ -687,7 +689,9 @@ function handleSolarInfo(data)
 		}
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
-	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
+	solarTotalAVG = $average ;
+	//setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
+	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , solarTotalAVG );
 	solarInfoT = setTimeout("getSolarInfo()", 10000);
 }
 
@@ -756,7 +760,9 @@ function handleProduNTInfo(data)
 	if (isNaN(produ2))produ2 = 0;
 	produTotalToday = produTotalToday + produ2 ;
 	produTotalAVG  =  Math.max(produTotalAVG ,$average);
-	setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
+	//setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
+setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , solarTotalAVG );
+
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
 
