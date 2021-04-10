@@ -737,7 +737,7 @@ function handlePlugsInfo(data)
 					if (debugOn>0)console.log(data[key].CurrentState);
 					if (debugOn>0)console.log(data[key].TargetStatus);
 					
-					if (data[key].TargetStatus == "1"){
+					if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
 						plugSTATES[a] = "1";
 						$("#img_plug"+a).attr('src', "themes/images/Generic48_On.png");
 					}else{
@@ -745,13 +745,6 @@ function handlePlugsInfo(data)
 						$("#img_plug"+a).attr('src', "themes/images/Generic48_Off.png");
 					}
 					
-					if (data[key].CurrentState == "1"){
-						plugSTATES[a] = "1";
-						$("#img_plug"+a).attr('src', "themes/images/Generic48_On.png");
-					}else{
-						plugSTATES[a] = "0";
-						$("#img_plug"+a).attr('src', "themes/images/Generic48_Off.png");
-					}
 					
 					if (debugOn>0)console.log(data[key].IsConnected);
 					a++;
