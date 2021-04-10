@@ -290,23 +290,12 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 	margin-top: 30px;
 }
 
-#plug1 .usage-title {
+.plug-title {
 	background: url(images/power-ico.png) 2px top no-repeat;
 	margin-top: 30px;
-}
-#plug2 .usage-title {
-	background: url(images/power-ico.png) 2px top no-repeat;
-	margin-top: 30px;
-}
-#plug3 .usage-title {
-	background: url(images/power-ico.png) 2px top no-repeat;
-	margin-top: 30px;
+	padding: 4px 0 16px 26px;
 }
 
-#plug4 .usage-title {
-	background: url(images/power-ico.png) 2px top no-repeat;
-	margin-top: 30px;
-}
 
 
 .usage-bar .usage-bar-block {
@@ -333,9 +322,8 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 	display: block;
 	float: left;
 	height: 30px;
-	width: 5%;
+	width: 35px;
 	margin: 1px;
-	
 }
 
 .usage-bar .usage-bar-img {
