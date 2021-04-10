@@ -1,7 +1,4 @@
 //Various programStates
-
-var debugOn = 1;
-
 var PROG_MANUAL 			= 0;
 var PROG_BASE 				= 1;
 var PROG_TEMPOVERRIDE = 2;
@@ -28,37 +25,6 @@ var solarTotalAVG = 0;
 
 var solarAvailable = 1;
 
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-
-//var PLUGS_INFO_URL = "/test.json";
-var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
-var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", ""];
-var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
-var plugTYPES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
-var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
-var plugsAvailable = 1;
-
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-
-
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
 
@@ -69,7 +35,8 @@ var GASUSAGE_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=gas_quantity&rra=
 
 var SOLAR_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var SOLARFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
-var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&rra=5min&readableTime=1&nullForNaN=1&from="
+var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
+
 
 var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
@@ -97,9 +64,6 @@ var produLTInfoT = null;
 var produNTInfoT = null;
 var waterusageInfoT = null;
 var waterFlowInfoT = null;
-
-var plugsInfoT = null;
-
 var setTempT = null;
 
 var userActive = false;
@@ -119,7 +83,6 @@ function initPage()
 	if(jQuery.hcb.proxy.supported == false)
 	{	
 		getSolarFlowInfo();
-		getPlugsInfo();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -159,7 +122,6 @@ function logout()
 	clearTimeout(produNTInfoT);
 	clearTimeout(pwrusageInfoT);
 	clearTimeout(waterFlowInfoT);
-	clearTimeout(plugsInfoT);
 	
 	pwrusageInfoT = null;
 	elecLTInfoT = null;
@@ -172,7 +134,6 @@ function logout()
 	produNTInfoT = null;
 	waterusageInfoT = null;
 	waterFlowInfoT = null;
-	plugsInfoT = null;
 
 	clearTimeout(setTempT);	
 	setTempT = null;
@@ -196,7 +157,6 @@ function mainPageLoaded()
 {
 	getThermostatStates();
 	getThermostatInfo();
-	
 }
 
 function mainPageHidden()
@@ -248,42 +208,6 @@ function solarPageHidden()
 	if(getProduLTInfo != null)
 		clearTimeout(getProduLTInfo);
 }
-
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-
-function plugsPageLoaded()
-{
-	getPlugsInfo();
-}
-
-function plugsPageHidden()
-{
-	if(getPlugsInfo() != null)
-		clearTimeout(getPlugsInfo());
-}
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
-//**********************************************************************************
 
 
 function setTempToDiv(divId, temp)
@@ -619,18 +543,6 @@ function fillBlockBar(uType, blocksActive)
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		if (uType == "plug1"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArrayPower[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
-		if (uType == "plug2"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArrayPower[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
 	}
 }
 
@@ -652,177 +564,6 @@ function setUsageInfo(uType, uValue, avgValue)
 	}
 }
 
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-
-function togglePlug(a, newstate)
-{
-	//alert(plugUUIDS[a]);
-	var fullUrl = "/hdrv_zwave?action=basicCommand&uuid=" + plugUUIDS[a] + "&state=";
-	if (debugOn>0)console.log("a: " + a + "   newstate: " +  newstate);
-	
-	if (debugOn>0)console.log(plugUUIDS[a]);
-	if (debugOn>0)console.log(plugTYPES[a]);
-	if (plugTYPES[a] == "single"){
-		if (debugOn>0)console.log(plugUUIDS[a]);
-		if (plugSTATES[a]=="1"){
-			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_On.png");
-			if (debugOn>0)console.log(fullUrl + "0");
-			$.getJSON( fullUrl + "0", getnewStatus);
-		}else{
-			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_Off.png");
-			if (debugOn>0)console.log( fullUrl + "1");
-			$.getJSON( fullUrl + "1", getnewStatus);
-		}
-		if (debugOn>0)console.log("switch pressed");
-	}
-	if (plugTYPES[a]=="double"){
-		if (debugOn>0)console.log(plugUUIDS[a]);
-		if (newstate == "off"){
-			if (debugOn>0)console.log(fullUrl + "0");
-			$.getJSON( fullUrl + "0", getnewStatus);
-		}else{
-			if (debugOn>0)console.log( fullUrl + "1");
-			$.getJSON( fullUrl + "1", getnewStatus);
-		}
-		if (debugOn>0)console.log("switch pressed");
-	}
-	
-	
-}
-
-function getnewStatus()
-{
-	//get new info about the Plugs
-	plugsInfoT = setTimeout("getPlugsInfo()", 1000);
-	if (debugOn>0)console.log("timeout started to get new status");
-}
-
-/*
-http://ip/hdrv_zwave?action=basicCommand&uuid=uuid-invullen&state=1
-State=1 is aan
-State=0 is uit
-Uuid is te vinden in Get devices.json
-CurrentState =-1 (niet geschakeld)
-IsConnected = 0  (niet aangesloten)
-*/
-
-function handlePlugsInfo(data)
-{		var a = 1;
-		plugsAvailable = 0;
-		if (debugOn>0)console.log(data);
-		
-		for(var i=1; i<plugSTATES.length; i++){
-			$('#plug' + i).hide();
-		}
-		
-			
-
-		for (var key in data) {
-			console.log("Key: " + key);
-			if (key != "dev_settings_device"){
-				if (data[key].type =="FGWPF102" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
-					plugsAvailable = 1;
-					if (data[key].type =="FGWPF102"){
-						plugTYPES[a] = "single";
-							$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
-						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
-							plugSTATES[a] = "1";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
-						}else{
-							plugSTATES[a] = "0";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
-						}
-					}else{
-						plugTYPES[a] = "double";
-						plugSTATES[a] = "1";
-					}
-					if (debugOn>0)console.log(data[key].uuid);
-					plugUUIDS[a] = data[key].uuid;
-					if (debugOn>0)console.log(data[key].name);
-					$("#name_plug"+a).html(data[key].name);
-					$("#plug"+a).show();
-					if (debugOn>0)console.log(data[key].type);
-					if (debugOn>0)console.log(data[key].HealthValue);
-					if (debugOn>0)console.log(data[key].DeviceName);
-					if (debugOn>0)console.log(data[key].CurrentElectricityFlow);
-					var CurrentElectricityFlow = data[key].CurrentElectricityFlow;
-					if (isNaN(CurrentElectricityFlow))CurrentElectricityFlow = 0;
-					setUsageInfo("plug" + a , CurrentElectricityFlow, 2500/3);
-					if (debugOn>0)console.log("plug: " + "plug" + a);
-					if (debugOn>0)console.log(data[key].CurrentState);
-					if (debugOn>0)console.log(data[key].TargetStatus);
-					
-					if (debugOn>0)console.log(data[key].IsConnected);
-					a++;
-				}
-			}
-		}
-		if (plugsAvailable == 0){
-			$('#dot_14').hide();
-			$('#dot_24').hide();
-			$('#dot_34').hide();
-			$('#dot_44').hide();
-		}
-		else{
-			$('#dot_14').show();
-			$('#dot_24').show();
-			$('#dot_34').show();
-			$('#dot_44').show();
-		}
-		
-		plugsInfoT = setTimeout("getPlugsInfo()", 10000);
-}
-
-function getPlugsInfo()
-{
-	if (debugOn>0)console.log("Getting new plug data");
-	if(plugsInfoT != null)
-		clearTimeout(plugsInfoT);
-	$.getJSON( PLUGS_INFO_URL, handlePlugsInfo);
-}
-
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-//*********************************************************************************
-
 function handlePwrusageInfo(data)
 {
 	if(data && (data.result == "ok"))
@@ -837,6 +578,7 @@ function handlePwrusageInfo(data)
 //		console.debug("Error occurred. Return to login page?");
 	}
 }
+
 
 function handleElecLTInfo(data)
 {
@@ -911,12 +653,16 @@ function handleSolarFlowInfo(data)
 	if (isNaN($current)){
 			$current = 0;
 			solarAvailable = 0;
+			//$("#solarAvail").html("solar niet gevonden");
+			//$('#solarFields').hide();
 			$('#dot_13').hide();
 			$('#dot_23').hide();
 			$('#dot_33').hide();
 		}
 		else{
 			solarAvailable = 1;
+			//$("#solarAvail").html("solar gevonden");
+			//$('#solarFields').show();
 			$('#dot_13').show();
 			$('#dot_23').show();
 			$('#dot_33').show();
@@ -944,6 +690,7 @@ function handleSolarInfo(data)
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	solarTotalAVG = $average ;
+	//setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
 	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , solarTotalAVG );
 	solarInfoT = setTimeout("getSolarInfo()", 10000);
 }
@@ -1014,7 +761,7 @@ function handleProduNTInfo(data)
 	produTotalToday = produTotalToday + produ2 ;
 	produTotalAVG  =  Math.max(produTotalAVG ,$average);
 	//setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
-    setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , solarTotalAVG );
+setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , solarTotalAVG );
 
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
@@ -1108,7 +855,6 @@ function handleWaterusageInfo(data)
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
 }
-
 
 
 function getPwrusageInfo()

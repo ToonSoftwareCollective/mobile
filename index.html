@@ -32,70 +32,34 @@
 		$("#solar").live( 'pageshow', solarPageLoaded);
 		$("#solar").live( 'pagehide', solarPageHidden);
 		
-		$("#plugs").live( 'pageshow', plugsPageLoaded);
-		$("#plugs").live( 'pagehide', plugsPageHidden);
-		
 	$(function(){ 
 			   
 		$("#main").bind('swipeleft',function(event, ui){            
 		   $.mobile.changePage("#consum", { transition: "slide"} ); 
-		   })    
-		   
+		   })      
 	    $("#consum").bind('swipeleft',function(event, ui){ 
 			if (solarAvailable == 1){
 				$.mobile.changePage("#solar", { transition: "slide"} ); 
 			}
-			else if (plugsAvailable == 1){
-				$.mobile.changePage("#plugs", { transition: "slide"} ); 
-			}
 			else{
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 			}
 		  })
-		  
 		$("#solar").bind('swipeleft',function(event, ui){ 
-		    if (plugsAvailable == 1){
-				$.mobile.changePage("#plugs", { transition: "slide"} ); 
-			}
-			else{
-			 $.mobile.changePage("#main", { transition: "slide"} ); 
-			}
+		   $.mobile.changePage("#main", { transition: "slide"} );  
 		  })
-		  
-		$("#plugs").bind('swipeleft',function(event, ui){ 
-			 $.mobile.changePage("#main", { transition: "slide"} ); 
-		  })
-		 
-		 
-		 $("#plugs").bind('swiperight',function(event, ui){ 
-		   if (solarAvailable == 1){
-				$.mobile.changePage("#solar", { transition: "reverse slide"} ); 
-			}
-			else{
-			 $.mobile.changePage("#consum", { transition: "reverse slide"} ); 
-			} 
-		 
-		 })
-		
 		$("#solar").bind('swiperight',function(event, ui){ 
 		   $.mobile.changePage("#consum", { transition: "reverse slide"} );  
 		   })
-		   
 		$("#consum").bind('swiperight',function(event, ui){ 
 		   $.mobile.changePage("#main", { transition: "reverse slide"} );  
 		   })
-		   
-		   
 		$("#main").bind('swiperight',function(event, ui){
-		
-			if (plugsAvailable == 1){
-				$.mobile.changePage("#plugs", { transition: "reverse slide"} ); 
-			}
-			else if (solarAvailable == 1){
+			if (solarAvailable == 1){
 				$.mobile.changePage("#solar", { transition: "reverse slide"} ); 
 			}
 			else{
-			 $.mobile.changePage("#consum", { transition: "reverse slide"} ); 
+				$.mobile.changePage("#consum", { transition: "reverse slide"} ); 
 			}
 		   })
 	})
@@ -214,7 +178,6 @@
             	<li class="dot active" id="dot_11"></li>
                 <li class="dot" id="dot_12"></li>
 				<li class="dot" id="dot_13"></li>
-				<li class="dot" id="dot_14"></li>
             </ul>
         </div>
         
@@ -338,7 +301,6 @@
             	<li class="dot" id="dot_21"></li>
                 <li class="dot active" id="dot_22"></li>
 				<li class="dot" id="dot_23"></li>
-				<li class="dot" id="dot_24"></li>
             </ul>
         </div>
         
@@ -348,7 +310,7 @@
 
 
 
-<!-- page - solar -->
+<!-- page - consumption -->
 <div data-role="page" id="solar" data-theme="f">
 	<div data-role="header" data-theme="f">
     	<div class="logo"></div>
@@ -433,6 +395,7 @@
 				<span class="usage-unit">kWh</span>
 			</div>
 		</fieldset>
+
 		
 	</div><!-- /content -->
 
@@ -443,314 +406,12 @@
 				<li class="dot" id="dot_31"></li>
                 <li class="dot" id="dot_32"></li>
 				<li class="dot active" id="dot_33"></li>
-				 <li class="dot" id="dot_34"></li>
             </ul>
         </div>
         
     </div>
     
 </div><!-- /page -->
-
-
-<!-- page - plugs -->
-<div data-role="page" id="plugs" data-theme="f">
-	<div data-role="header" data-theme="f">
-    	<div class="logo"></div>
-    </div>
-	<div data-role="content">
-		<fieldset id="plug1">
-			<div class="plug-title" id="name_plug1">Plug 1 nu</div>
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug1_1" onClick="togglePlug(1,'off')"></div>
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_On.png" style="width:28px;height:28px;" id="img_plug1_2" onClick="togglePlug(1,'on')"></div>
-				
-				<div id="plug1_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug1_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug1" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-
-		<fieldset id="plug2">
-			<div class="plug-title" id="name_plug2">Plug 2 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug2_1" onClick="togglePlug(2,'off')"></div>
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_On.png" style="width:28px;height:28px;" id="img_plug2_2" onClick="togglePlug(2,'on')"></div>
-			
-				<div id="plug2_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug2_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug2" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug3">
-			<div class="plug-title" id="name_plug3">Plug 3 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug3_1" onClick="togglePlug(3,'on')"></div>
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_On.png" style="width:28px;height:28px;" id="img_plug3_2" onClick="togglePlug(3,'off')"></div>
-			
-				<div id="plug3_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug3_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug3" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug4">
-			<div class="plug-title" id="name_plug4">Plug 4 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug4_1" onClick="togglePlug(4,'on')"></div>
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_On.png" style="width:28px;height:28px;" id="img_plug4_2" onClick="togglePlug(4,'off')"></div>
-			
-				<div id="plug4_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug4_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug4" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug5">
-			<div class="plug-title" id="name_plug5">Plug 5 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug5" onClick="togglePlug(5)"></div>
-				<div id="plug5_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug5_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug5" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug6">
-			<div class="plug-title" id="name_plug6">Plug 6 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug6" onClick="togglePlug(6)"></div>
-				<div id="plug6_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug6_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug6" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug7">
-			<div class="plug-title" id="name_plug7">Plug 7 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug7" onClick="togglePlug(7)"></div>
-				<div id="plug7_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug7_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug7" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug8">
-			<div class="plug-title" id="name_plug8">Plug 8 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug8" onClick="togglePlug(8)"></div>
-				<div id="plug8_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug8_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug8" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug9">
-			<div class="plug-title" id="name_plug9">Plug 9 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug9" onClick="togglePlug(9)"></div>
-				<div id="plug9_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug9_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug9" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug10">
-			<div class="plug-title" id="name_plug10">Plug 10 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug10" onClick="togglePlug(10)"></div>
-				<div id="plug10_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug10_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug10" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug11">
-			<div class="plug-title" id="name_plug11">Plug 11 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug11" onClick="togglePlug(11)"></div>
-				<div id="plug11_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug11_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug11" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-		<fieldset id="plug12">
-			<div class="plug-title" id="name_plug12">Plug 12 nu</div>  
-			<div class="usage-bar">
-			<div id="plug_empty" class="usage-bar-block-empty ui-corner-all">
-			<img src="themes/images/Generic48_Off.png" style="width:28px;height:28px;" id="img_plug12" onClick="togglePlug(12)"></div>
-				<div id="plug12_block-0" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-1" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-2" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-3" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-4" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-5" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-6" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-7" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-8" class="usage-bar-block ui-corner-all"></div>
-				<div id="plug12_block-9" class="usage-bar-block ui-corner-all"></div>
-			</div>
-			<div class="usage">
-				<span id="cur_plug12" class="usage-value">-</span>
-				<span class="usage-unit">Watt</span>
-			</div>
-		</fieldset>
-		
-	</div><!-- /content -->
-
-	<div data-role="footer" data-position="fixed" data-theme="f">
-    
-    	<div data-role="navbar">
-        	<ul>
-				<li class="dot" id="dot_41"></li>
-                <li class="dot" id="dot_42"></li>
-				<li class="dot" id="dot_43"></li>
-				<li class="dot active" id="dot_44"></li>
-            </ul>
-        </div>
-        
-    </div>
-    
-</div><!-- /page -->
-
 
 </body>
 </html>
