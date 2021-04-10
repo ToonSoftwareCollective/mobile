@@ -1,4 +1,7 @@
 //Various programStates
+
+var debugOn = 1;
+
 var PROG_MANUAL 			= 0;
 var PROG_BASE 				= 1;
 var PROG_TEMPOVERRIDE = 2;
@@ -24,6 +27,12 @@ var solarTotalAVG = 0;
 
 
 var solarAvailable = 1;
+var plugsAvailable = 1;
+
+
+var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", ""];
+var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
+var plugTYPES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
 
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
@@ -35,8 +44,7 @@ var GASUSAGE_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=gas_quantity&rra=
 
 var SOLAR_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var SOLARFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
-var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
-
+var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&rra=5min&readableTime=1&nullForNaN=1&from="
 
 var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
@@ -46,6 +54,11 @@ var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_
 var WATERUSAGE_INFO_URL =  "/hcb_rrd?action=getRrdData&loggerName=water_quantity&rra=10yrhours&readableTime=1&nullForNaN=1&from=";
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
+
+//var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
+var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
+
+var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
@@ -64,6 +77,9 @@ var produLTInfoT = null;
 var produNTInfoT = null;
 var waterusageInfoT = null;
 var waterFlowInfoT = null;
+
+var plugsInfoT = null;
+
 var setTempT = null;
 
 var userActive = false;
@@ -83,6 +99,7 @@ function initPage()
 	if(jQuery.hcb.proxy.supported == false)
 	{	
 		getSolarFlowInfo();
+		getPlugsInfo();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -122,6 +139,7 @@ function logout()
 	clearTimeout(produNTInfoT);
 	clearTimeout(pwrusageInfoT);
 	clearTimeout(waterFlowInfoT);
+	clearTimeout(plugsInfoT);
 	
 	pwrusageInfoT = null;
 	elecLTInfoT = null;
@@ -134,6 +152,7 @@ function logout()
 	produNTInfoT = null;
 	waterusageInfoT = null;
 	waterFlowInfoT = null;
+	plugsInfoT = null;
 
 	clearTimeout(setTempT);	
 	setTempT = null;
@@ -157,6 +176,7 @@ function mainPageLoaded()
 {
 	getThermostatStates();
 	getThermostatInfo();
+	
 }
 
 function mainPageHidden()
@@ -207,6 +227,17 @@ function solarPageHidden()
 		clearTimeout(getProduFlowInfo);
 	if(getProduLTInfo != null)
 		clearTimeout(getProduLTInfo);
+}
+
+function plugsPageLoaded()
+{
+	getPlugsInfo();
+}
+
+function plugsPageHidden()
+{
+	if(getPlugsInfo() != null)
+		clearTimeout(getPlugsInfo());
 }
 
 
@@ -489,60 +520,33 @@ function fillBlockBar(uType, blocksActive)
 	var i;
 	for(i=0; i<10; i++)
 	{
-		if (uType == "power"){
+		if (uType == "power" || uType == "elecNT" || uType.indexOf("plug")!=-1){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArrayPower[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		if (uType == "elecNT"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArrayPower[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
+		
 		if (uType == "gas"){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArrayGas[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		if (uType == "solarflow"){
+		if (uType == "solarflow" || uType == "solar" || uType == "produflow" || uType == "produNT"){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		if (uType == "solar"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
-		if (uType == "produflow"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
-		if (uType == "produNT"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArraySolar[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
-		if (uType == "waterflow"){
+
+		if (uType == "waterflow" || uType == "water"){
 			if(blocksActive > i)
 				$("#"+uType+"_block-"+i).css("background-color", colorArrayWater[i]);
 			else
 				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
 		}
-		if (uType == "water"){
-			if(blocksActive > i)
-				$("#"+uType+"_block-"+i).css("background-color", colorArrayWater[i]);
-			else
-				$("#"+uType+"_block-"+i).css("background-color", inActiveColor);
-		}
+
 	}
 }
 
@@ -564,6 +568,112 @@ function setUsageInfo(uType, uValue, avgValue)
 	}
 }
 
+
+function togglePlug(a, newstate)
+{
+	var fullUrl = "/hdrv_zwave?action=basicCommand&uuid=" + plugUUIDS[a] + "&state=";
+
+	if (plugTYPES[a] == "single"){
+		if (plugSTATES[a]=="1"){
+			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_On.png");
+			$.getJSON( fullUrl + "0", getnewStatus);
+		}else{
+			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_Off.png");
+			$.getJSON( fullUrl + "1", getnewStatus);
+		}
+	}
+	if (plugTYPES[a]=="double"){
+		if (newstate == "off"){
+			$.getJSON( fullUrl + "0", getnewStatus);
+		}else{
+			$.getJSON( fullUrl + "1", getnewStatus);
+		}
+	}
+	
+	
+}
+
+function getnewStatus()
+{
+	plugsInfoT = setTimeout("getPlugsInfo()", 1000);
+}
+
+
+function handlePlugsInfo(data)
+{		var a = 1;
+		plugsAvailable = 0;		
+		for(var i=1; i<plugSTATES.length; i++){
+			$('#plug' + i).hide();
+		}
+		
+		for (var key in data) {
+			if (key != "dev_settings_device"){
+				if (data[key].type =="FGWPF102" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
+					plugsAvailable = 1;
+					
+					$("#name_plug"+a).html(data[key].name);
+					$("#plug"+a).show();
+					
+					if (data[key].IsConnected =="1"){
+						$("#name_plug"+a).removeClass("plug-title-nf");
+						$("#us_plug"+a).removeClass("usage-nf");
+						if (data[key].type =="FGWPF102"){
+							plugTYPES[a] = "single";
+								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+							if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
+								plugSTATES[a] = "1";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
+							}else{
+								plugSTATES[a] = "0";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
+							}
+						}else{
+							plugTYPES[a] = "double";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_Off.png");
+							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_On.png");
+							plugSTATES[a] = "1";
+						}
+					}else{
+						$("#name_plug"+a).addClass("plug-title-nf");
+						$("#us_plug"+a).addClass("usage-nf");
+						if (data[key].type =="FGWPF102"){
+							plugTYPES[a] = "single";
+								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+								plugSTATES[a] = "0";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
+						}else{
+							plugTYPES[a] = "double";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_NF.png");
+							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_NF.png");
+							plugSTATES[a] = "0";
+						}	
+					}
+
+					plugUUIDS[a] = data[key].uuid;
+					var CurrentElectricityFlow = data[key].CurrentElectricityFlow;
+					if (isNaN(CurrentElectricityFlow) || data[key].IsConnected !="1")CurrentElectricityFlow = 0;
+					setUsageInfo("plug" + a , CurrentElectricityFlow, 750);
+					a++;
+				}
+			}
+		}
+		if (plugsAvailable == 0){
+			$('#dot_14').hide();
+			$('#dot_24').hide();
+			$('#dot_34').hide();
+			$('#dot_44').hide();
+		}
+		else{
+			$('#dot_14').show();
+			$('#dot_24').show();
+			$('#dot_34').show();
+			$('#dot_44').show();
+		}
+		
+		plugsInfoT = setTimeout("getPlugsInfo()", 10000);
+}
+
+
 function handlePwrusageInfo(data)
 {
 	if(data && (data.result == "ok"))
@@ -578,7 +688,6 @@ function handlePwrusageInfo(data)
 //		console.debug("Error occurred. Return to login page?");
 	}
 }
-
 
 function handleElecLTInfo(data)
 {
@@ -653,19 +762,17 @@ function handleSolarFlowInfo(data)
 	if (isNaN($current)){
 			$current = 0;
 			solarAvailable = 0;
-			//$("#solarAvail").html("solar niet gevonden");
-			//$('#solarFields').hide();
 			$('#dot_13').hide();
 			$('#dot_23').hide();
 			$('#dot_33').hide();
+			$('#dot_43').hide();
 		}
 		else{
 			solarAvailable = 1;
-			//$("#solarAvail").html("solar gevonden");
-			//$('#solarFields').show();
 			$('#dot_13').show();
 			$('#dot_23').show();
 			$('#dot_33').show();
+			$('#dot_43').show();
 		}
 	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
@@ -690,7 +797,6 @@ function handleSolarInfo(data)
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	solarTotalAVG = $average ;
-	//setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
 	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , solarTotalAVG );
 	solarInfoT = setTimeout("getSolarInfo()", 10000);
 }
@@ -761,7 +867,7 @@ function handleProduNTInfo(data)
 	produTotalToday = produTotalToday + produ2 ;
 	produTotalAVG  =  Math.max(produTotalAVG ,$average);
 	//setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , produTotalAVG/1000 );
-setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , solarTotalAVG );
+    setUsageInfo("produNT", Math.round(produTotalToday/10) / 100 , solarTotalAVG );
 
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
@@ -855,6 +961,7 @@ function handleWaterusageInfo(data)
 	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
 	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
 }
+
 
 
 function getPwrusageInfo()
@@ -979,6 +1086,14 @@ function getWaterusageInfo()
 		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";		
 	$.getJSON( WATERUSAGE_INFO_URL + $yesterday, handleWaterusageInfo);
 }
+
+function getPlugsInfo()
+{
+	if(plugsInfoT != null)
+		clearTimeout(plugsInfoT);
+	$.getJSON( PLUGS_INFO_URL, handlePlugsInfo);
+}
+
 
 function handleThermostatStates(data)
 {

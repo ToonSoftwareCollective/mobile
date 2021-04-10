@@ -1,3 +1,12 @@
+1.0.17
+- minor changes
+
+1.0.16
+- power plugs added
+
+1.0.15
+- lost in traffic
+
 1.0.14
 - textual changes
 - average of production Today and Solar Today levelled

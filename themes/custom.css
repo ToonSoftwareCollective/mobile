@@ -268,7 +268,6 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 }
 
 
-
 #produflow .usage-title {
 	background: url(images/power-ico.png) 2px top no-repeat;
 	margin-top: 15px;
@@ -285,11 +284,25 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 	margin-top: 30px;
 }
 
-
 #solar .usage-title {
 	background: url(images/power-ico.png) 2px top no-repeat;
 	margin-top: 30px;
 }
+
+.plug-title {
+	background: url(images/power-ico.png) 2px top no-repeat;
+	margin-top: 30px;
+	padding: 4px 0 16px 26px;
+}
+
+.plug-title-nf {
+	background: url(images/power-ico-nf.png) 2px top no-repeat;
+	margin-top: 30px;
+	padding: 4px 0 16px 26px;
+	color: #d9d5d5;
+}
+
+
 
 .usage-bar .usage-bar-block {
 	display: block;
@@ -308,6 +321,32 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 .usage .usage-unit {
 
 }
+
+.usage-nf {
+	text-align: right;
+	color: #d9d5d5;
+}
+
+/* -- Plugs -- */
+
+.usage-bar .usage-bar-block-empty {
+	display: block;
+	float: left;
+	height: 30px;
+	width: 35px;
+	margin: 1px;
+}
+
+.usage-bar .usage-bar-img {
+	display: block;
+	float: left;
+	height: 22px;
+	width: 4.5%;
+	margin: 1px;
+	background-color: #ededed;
+}
+
+
 
 
 /* -- Adjustmends voor different sizes -- */
