@@ -54,8 +54,10 @@ var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_
 var WATERUSAGE_INFO_URL =  "/hcb_rrd?action=getRrdData&loggerName=water_quantity&rra=10yrhours&readableTime=1&nullForNaN=1&from=";
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
-//var PLUGS_INFO_URL = "/test.json";
+
+//var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
 var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
+
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
@@ -608,28 +610,49 @@ function handlePlugsInfo(data)
 			if (key != "dev_settings_device"){
 				if (data[key].type =="FGWPF102" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
 					plugsAvailable = 1;
-					if (data[key].type =="FGWPF102"){
-						plugTYPES[a] = "single";
-							$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
-						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
-							plugSTATES[a] = "1";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
-						}else{
-							plugSTATES[a] = "0";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
-						}
-					}else{
-						plugTYPES[a] = "double";
-						plugSTATES[a] = "1";
-					}
-					
-					plugUUIDS[a] = data[key].uuid;
 					
 					$("#name_plug"+a).html(data[key].name);
 					$("#plug"+a).show();
+					
+					if (data[key].IsConnected =="1"){
+						$("#name_plug"+a).removeClass("plug-title-nf");
+						$("#us_plug"+a).removeClass("usage-nf");
+						if (data[key].type =="FGWPF102"){
+							plugTYPES[a] = "single";
+								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+							if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
+								plugSTATES[a] = "1";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
+							}else{
+								plugSTATES[a] = "0";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
+							}
+						}else{
+							plugTYPES[a] = "double";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_Off.png");
+							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_On.png");
+							plugSTATES[a] = "1";
+						}
+					}else{
+						$("#name_plug"+a).addClass("plug-title-nf");
+						$("#us_plug"+a).addClass("usage-nf");
+						if (data[key].type =="FGWPF102"){
+							plugTYPES[a] = "single";
+								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+								plugSTATES[a] = "0";
+								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
+						}else{
+							plugTYPES[a] = "double";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_NF.png");
+							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_NF.png");
+							plugSTATES[a] = "0";
+						}	
+					}
+
+					plugUUIDS[a] = data[key].uuid;
 					var CurrentElectricityFlow = data[key].CurrentElectricityFlow;
-					if (isNaN(CurrentElectricityFlow))CurrentElectricityFlow = 0;
-					setUsageInfo("plug" + a , CurrentElectricityFlow, 2500/3);
+					if (isNaN(CurrentElectricityFlow) || data[key].IsConnected !="1")CurrentElectricityFlow = 0;
+					setUsageInfo("plug" + a , CurrentElectricityFlow, 750);
 					a++;
 				}
 			}
@@ -650,7 +673,6 @@ function handlePlugsInfo(data)
 		plugsInfoT = setTimeout("getPlugsInfo()", 10000);
 }
 
-f
 
 function handlePwrusageInfo(data)
 {
@@ -743,12 +765,14 @@ function handleSolarFlowInfo(data)
 			$('#dot_13').hide();
 			$('#dot_23').hide();
 			$('#dot_33').hide();
+			$('#dot_43').hide();
 		}
 		else{
 			solarAvailable = 1;
 			$('#dot_13').show();
 			$('#dot_23').show();
 			$('#dot_33').show();
+			$('#dot_43').show();
 		}
 	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
