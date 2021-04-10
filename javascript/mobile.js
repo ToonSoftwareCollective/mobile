@@ -43,6 +43,7 @@ var solarAvailable = 1;
 var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", ""];
 var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
+var plugTYPES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 var plugsAvailable = 1;
 
@@ -117,7 +118,7 @@ function initPage()
 	//If we are local we don't need to login
 	if(jQuery.hcb.proxy.supported == false)
 	{	
-		getSolarInfo();
+		getSolarFlowInfo();
 		getPlugsInfo();
 		$.mobile.changePage("#main");
 	}
@@ -673,22 +674,40 @@ function setUsageInfo(uType, uValue, avgValue)
 //*********************************************************************************
 //*********************************************************************************
 
-function togglePlug(a)
+function togglePlug(a, newstate)
 {
 	//alert(plugUUIDS[a]);
 	var fullUrl = "/hdrv_zwave?action=basicCommand&uuid=" + plugUUIDS[a] + "&state=";
+	if (debugOn>0)console.log("a: " + a + "   newstate: " +  newstate);
+	
 	if (debugOn>0)console.log(plugUUIDS[a]);
-	//if ($("#img_plug"+a).attr('src')== "themes/images/Generic48_Off.png"){
-	if (plugSTATES[a]=="1"){
-		$("#img_plug"+a).attr('src', "themes/images/Generic48_On.png");
-		if (debugOn>0)console.log(fullUrl + "0");
-		$.getJSON( fullUrl + "0", getnewStatus);
-	}else{
-		$("#img_plug"+a).attr('src', "themes/images/Generic48_Off.png");
-		if (debugOn>0)console.log( fullUrl + "1");
-		$.getJSON( fullUrl + "1", getnewStatus);
+	if (debugOn>0)console.log(plugTYPES[a]);
+	if (plugTYPES[a] == "single"){
+		if (debugOn>0)console.log(plugUUIDS[a]);
+		if (plugSTATES[a]=="1"){
+			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_On.png");
+			if (debugOn>0)console.log(fullUrl + "0");
+			$.getJSON( fullUrl + "0", getnewStatus);
+		}else{
+			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_Off.png");
+			if (debugOn>0)console.log( fullUrl + "1");
+			$.getJSON( fullUrl + "1", getnewStatus);
+		}
+		if (debugOn>0)console.log("switch pressed");
 	}
-	if (debugOn>0)console.log("switch pressed");
+	if (plugTYPES[a]=="double"){
+		if (debugOn>0)console.log(plugUUIDS[a]);
+		if (newstate == "off"){
+			if (debugOn>0)console.log(fullUrl + "0");
+			$.getJSON( fullUrl + "0", getnewStatus);
+		}else{
+			if (debugOn>0)console.log( fullUrl + "1");
+			$.getJSON( fullUrl + "1", getnewStatus);
+		}
+		if (debugOn>0)console.log("switch pressed");
+	}
+	
+	
 }
 
 function getnewStatus()
@@ -723,6 +742,20 @@ function handlePlugsInfo(data)
 			if (key != "dev_settings_device"){
 				if (data[key].type =="FGWPF102" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
 					plugsAvailable = 1;
+					if (data[key].type =="FGWPF102"){
+						plugTYPES[a] = "single";
+							$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
+							plugSTATES[a] = "1";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
+						}else{
+							plugSTATES[a] = "0";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
+						}
+					}else{
+						plugTYPES[a] = "double";
+						plugSTATES[a] = "1";
+					}
 					if (debugOn>0)console.log(data[key].uuid);
 					plugUUIDS[a] = data[key].uuid;
 					if (debugOn>0)console.log(data[key].name);
@@ -732,19 +765,12 @@ function handlePlugsInfo(data)
 					if (debugOn>0)console.log(data[key].HealthValue);
 					if (debugOn>0)console.log(data[key].DeviceName);
 					if (debugOn>0)console.log(data[key].CurrentElectricityFlow);
-					setUsageInfo("plug" + a , data[key].CurrentElectricityFlow, 2500/3);
+					var CurrentElectricityFlow = data[key].CurrentElectricityFlow;
+					if (isNaN(CurrentElectricityFlow))CurrentElectricityFlow = 0;
+					setUsageInfo("plug" + a , CurrentElectricityFlow, 2500/3);
 					if (debugOn>0)console.log("plug: " + "plug" + a);
 					if (debugOn>0)console.log(data[key].CurrentState);
 					if (debugOn>0)console.log(data[key].TargetStatus);
-					
-					if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
-						plugSTATES[a] = "1";
-						$("#img_plug"+a).attr('src', "themes/images/Generic48_On.png");
-					}else{
-						plugSTATES[a] = "0";
-						$("#img_plug"+a).attr('src', "themes/images/Generic48_Off.png");
-					}
-					
 					
 					if (debugOn>0)console.log(data[key].IsConnected);
 					a++;
@@ -918,7 +944,6 @@ function handleSolarInfo(data)
 	}
 	$average = Math.round(($total/$numberofitems)/1000);
 	solarTotalAVG = $average ;
-	//setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , $average );
 	setUsageInfo("solar", Math.round(($value1 - $value2)/10) / 100 , solarTotalAVG );
 	solarInfoT = setTimeout("getSolarInfo()", 10000);
 }
