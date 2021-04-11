@@ -54,12 +54,13 @@ var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_
 var WATERUSAGE_INFO_URL =  "/hcb_rrd?action=getRrdData&loggerName=water_quantity&rra=10yrhours&readableTime=1&nullForNaN=1&from=";
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
-
 //var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
 var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
+var VERSION_INFO_URL = "version.txt?tst=" + Math.random();
+//var VERSION_INFO_URL = "version.txt";
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
 var SET_TARGET_TEMP_URLCTOR				= function(setpoint) { return "/happ_thermstat?action=roomSetpoint&Setpoint=" + setpoint; };
@@ -89,6 +90,7 @@ var currentTemp = 0;
 var currentSetpoint = 0;
 var programState = 0;
 
+
 function initPage()
 {
 	$.hcb.translatePage();
@@ -98,6 +100,7 @@ function initPage()
 	//If we are local we don't need to login
 	if(jQuery.hcb.proxy.supported == false)
 	{	
+		getVersionInfo();
 		getSolarFlowInfo();
 		getPlugsInfo();
 		$.mobile.changePage("#main");
@@ -162,13 +165,23 @@ function logout()
 	$.mobile.changePage("#login");
 }
 
+function getVersionInfo()
+{
+	$.get(VERSION_INFO_URL, function(data, status){
+		if (status.indexOf("succ")>-1){
+			$("#version").html("versie " + data);
+		}else{
+			$("#version").html("");
+		}
+  });
+}
+
 function login()
 {	
 	var url = '/servlet/forwarder/'
 	var username=document.getElementById('username').value;
 	var password=document.getElementById('password').value;
 	alert(username + ' ' + password);
-	
 	$.mobile.changePage("#main");
 }
 
@@ -250,6 +263,8 @@ function setTempToDiv(divId, temp)
 	var setpS = (temp - (setpB*100) ) ? 5 : 0;
 	$("#"+divId).html( setpB+ ","+setpS+ "&deg C");
 }
+
+
 
 function showFormattedIndoorTemp(temperature, setpoint)
 {
@@ -617,7 +632,7 @@ function handlePlugsInfo(data)
 					if (data[key].IsConnected =="1"){
 						$("#name_plug"+a).removeClass("plug-title-nf");
 						$("#us_plug"+a).removeClass("usage-nf");
-						if (data[key].type =="FGWPF102"){
+						if (data[key].type =="FGWPF102" || data[key].type =="EMPOWER" ){
 							plugTYPES[a] = "single";
 								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
 							if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
@@ -636,7 +651,7 @@ function handlePlugsInfo(data)
 					}else{
 						$("#name_plug"+a).addClass("plug-title-nf");
 						$("#us_plug"+a).addClass("usage-nf");
-						if (data[key].type =="FGWPF102"){
+						if (data[key].type =="FGWPF102" || data[key].type =="EMPOWER" ){
 							plugTYPES[a] = "single";
 								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
 								plugSTATES[a] = "0";
