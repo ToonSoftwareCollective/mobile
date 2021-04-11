@@ -23,7 +23,13 @@
 	background: url(images/logo.png) no-repeat;	
 	display: block;
 	height: 25px;
-	margin: 10px 0 10px 15px;
+	margin: 10px 0 5px 15px;
+} 
+
+.ui-header .version {
+	text-align: left;
+	font-size: 0.9em;
+	margin: 0px 0 0px 15px;
 } 
 
 .ui-page .ui-footer {
