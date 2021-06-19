@@ -50,7 +50,7 @@ var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 
 
-var WATER_INFO_URL =  "water_mobile.json";
+var WATER_INFO_URL =  "water_mobile.json?tst=" + Math.random();
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
 //var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
@@ -935,11 +935,12 @@ function handleWaterFlowInfo(data)
 
 function handleWaterInfo(data)
 {
+	//console.log("waterdata " + data)
 	if(data && (data.result == "ok"))
 	{
 		if(data.water)
-			console.log("waterflow " + data.water.flow)
-		    console.log("water "  + data.water.value)
+			//console.log("waterflow " + data.water.flow)
+		    //console.log("water "  + data.water.value)
 			setUsageInfo("waterflow", data.water.flow , 5 );
 			setUsageInfo("water", data.water.value, data.water.avgValue);
 			waterInfoT = setTimeout("getWaterInfo()", 10000);
