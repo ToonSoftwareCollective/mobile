@@ -50,8 +50,7 @@ var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 
 
-//var WATERUSAGE_INFO_URL =  "water_mobile.json";
-var WATERUSAGE_INFO_URL =  "/hcb_rrd?action=getRrdData&loggerName=water_quantity&rra=10yrhours&readableTime=1&nullForNaN=1&from=";
+var WATER_INFO_URL =  "water_mobile.json";
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
 //var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
@@ -76,7 +75,7 @@ var produFlowInfoT = null;
 
 var produLTInfoT = null;
 var produNTInfoT = null;
-var waterusageInfoT = null;
+var waterInfoT = null;
 var waterFlowInfoT = null;
 
 var plugsInfoT = null;
@@ -153,7 +152,7 @@ function logout()
 	produFlowInfoT = null;
 	produLTInfoT = null;
 	produNTInfoT = null;
-	waterusageInfoT = null;
+	waterInfoT = null;
 	waterFlowInfoT = null;
 	plugsInfoT = null;
 
@@ -203,7 +202,7 @@ function usagePageLoaded()
 	getPwrusageInfo();
 	getElecLTInfo();
 	getGasusageInfo();
-	getWaterusageInfo();
+	getWaterInfo();
 	getWaterFlowInfo();
 }
 
@@ -215,8 +214,8 @@ function usagePageHidden()
 		clearTimeout(getElecLTInfo);
 	if(getGasusageInfo != null)
 		clearTimeout(getGasusageInfo);
-	if(getWaterusageInfo != null)
-		clearTimeout(getWaterusageInfo);
+	if(getWaterInfo != null)
+		clearTimeout(getWaterInfo);
 	if(getWaterFlowInfo != null)
 		clearTimeout(getWaterFlowInfo);
 }
@@ -924,57 +923,32 @@ function handleWaterFlowInfo(data)
 	}
 	if (isNaN($current))$current = 0;
 	if (isNaN($max)){
-
 		$("#water").hide();
 		$("#waterflow").hide();
-		
 	}
 	else{
 		$("#water").show();
 		$("#waterflow").show();
 	}
-	setUsageInfo("waterflow", Math.round($current/60) , $max/3 );
 	waterInfoT = setTimeout("getWaterFlowInfo()", 5000);
 }
 
-function handleWaterusageInfo(data)
+function handleWaterInfo(data)
 {
-	var $value1 = -1;
-	var $value2 = -1;
-	var $end = 0;
-	var $endindex = 0;
-	var $start = 0;
-	var $startindex = 0;
-	var $numberofitems = 0;
-	var $average = 1000;
-	var i=0;
-	for (var $key in data) {
-		i++;
-		
-		if (data[$key] != -1 && data[$key] != null && data[$key] > 0 && $start == 0) {
-			$start = data[$key];
-			$startindex = i;
-		}	
-		
-		if (i<=96){
-			if (data[$key] != -1 && data[$key] != null && $start > 0) {
-					$end = data[$key];
-					$endindex = i;
-				}	
-		}
-		if (i>96){
-			if (data[$key] != -1 && data[$key] != null && data[$key] > $value1){
-				if ($value2 == -1) {
-					$value2 = data[$key];
-				}
-				
-				$value1 = data[$key];
-			}
-		}
+	if(data && (data.result == "ok"))
+	{
+		if(data.water)
+			console.log("waterflow " + data.water.flow)
+		    console.log("water "  + data.water.value)
+			setUsageInfo("waterflow", data.water.flow , 5 );
+			setUsageInfo("water", data.water.value, data.water.avgValue);
+			waterInfoT = setTimeout("getWaterInfo()", 10000);
 	}
-	$average = Math.round(($end-$start)/(($endindex-$startindex)/24));
-	setUsageInfo("water", Math.round(($value1 - $value2)) , $average );
-	waterusageInfoT = setTimeout("getWaterusageInfo()", 10000);
+	else
+	{
+		//Error occurred. Return to login page?
+//		console.debug("Error occurred. Return to login page?");
+	}
 }
 
 
@@ -1092,14 +1066,12 @@ function getWaterFlowInfo()
 	$.getJSON( WATERFLOW_INFO_URL + $yesterday, handleWaterFlowInfo);
 }
 
-function getWaterusageInfo()
+
+function getWaterInfo()
 {
-	if(waterusageInfoT != null)
-		clearTimeout(waterusageInfoT);
-		var $date = new Date();
-		$date.setDate($date.getDate()-5);
-		var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + " 23:00:00";		
-	$.getJSON( WATERUSAGE_INFO_URL + $yesterday, handleWaterusageInfo);
+		if(waterInfoT != null)
+		clearTimeout(waterInfoT);
+		$.getJSON( WATER_INFO_URL, handleWaterInfo);
 }
 
 function getPlugsInfo()
