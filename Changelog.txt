@@ -1,3 +1,6 @@
+1.0.19
+- different approach for water flow/usage (via json file)
+
 1.0.18
 - version info added
 - empower operation changed
