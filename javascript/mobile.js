@@ -50,7 +50,8 @@ var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 
 
-var WATER_INFO_URL =  "water_mobile.json?tst=" + Math.random();
+//var WATER_INFO_URL =  "water_mobile.json?tst=" + Math.random();
+var WATER_INFO_URL =  "/water.html?tst=" + Math.random();
 var WATERFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=water_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
 
 //var PLUGS_INFO_URL = "/test.json?tst=" + Math.random();;
