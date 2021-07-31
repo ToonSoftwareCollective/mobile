@@ -30,9 +30,8 @@ var solarAvailable = 1;
 var plugsAvailable = 1;
 
 
-var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", ""];
-var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
-var plugTYPES = ["", "", "", "", "", "", "", "","", "", "", "", ""];
+var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
+var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
 
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
@@ -588,29 +587,22 @@ function togglePlug(a, newstate)
 {
 	var fullUrl = "/hdrv_zwave?action=basicCommand&uuid=" + plugUUIDS[a] + "&state=";
 
-	if (plugTYPES[a] == "single"){
-		if (plugSTATES[a]=="1"){
-			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_On.png");
-			$.getJSON( fullUrl + "0", getnewStatus);
-		}else{
-			$("#img_plug1_1"+a).attr('src', "themes/images/Generic48_Off.png");
-			$.getJSON( fullUrl + "1", getnewStatus);
-		}
+	if (plugSTATES[a]=="1"){
+		$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
+		$.getJSON( fullUrl + "0");
+	}else{
+		$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
+		$.getJSON( fullUrl + "1");
 	}
-	if (plugTYPES[a]=="double"){
-		if (newstate == "off"){
-			$.getJSON( fullUrl + "0", getnewStatus);
-		}else{
-			$.getJSON( fullUrl + "1", getnewStatus);
-		}
-	}
-	
+	setTimeout(function () { getnewStatus(a); }, 1000);
+
 	
 }
 
-function getnewStatus()
+function getnewStatus(a)
 {
-	plugsInfoT = setTimeout("getPlugsInfo()", 1000);
+	var fullUrl = "/hdrv_zwave?action=GetBasic&waitForReponse=0&timeout=120&&uuid=" + plugUUIDS[a];
+	$.getJSON( fullUrl );
 }
 
 
@@ -623,7 +615,7 @@ function handlePlugsInfo(data)
 		
 		for (var key in data) {
 			if (key != "dev_settings_device"){
-				if (data[key].type =="FGWPF102" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
+				if (data[key].type =="FGWPF102" || data[key].type =="FGWP011" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
 					plugsAvailable = 1;
 					
 					$("#name_plug"+a).html(data[key].name);
@@ -632,36 +624,20 @@ function handlePlugsInfo(data)
 					if (data[key].IsConnected =="1"){
 						$("#name_plug"+a).removeClass("plug-title-nf");
 						$("#us_plug"+a).removeClass("usage-nf");
-						if (data[key].type =="FGWPF102" || data[key].type =="EMPOWER" ){
-							plugTYPES[a] = "single";
-								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
-							if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
-								plugSTATES[a] = "1";
-								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
-							}else{
-								plugSTATES[a] = "0";
-								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
-							}
-						}else{
-							plugTYPES[a] = "double";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_Off.png");
-							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_On.png");
+						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
 							plugSTATES[a] = "1";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
+						}else{
+							plugSTATES[a] = "0";
+							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_Off.png");
 						}
 					}else{
 						$("#name_plug"+a).addClass("plug-title-nf");
 						$("#us_plug"+a).addClass("usage-nf");
-						if (data[key].type =="FGWPF102" || data[key].type =="EMPOWER" ){
-							plugTYPES[a] = "single";
-								$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
-								plugSTATES[a] = "0";
-								$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
-						}else{
-							plugTYPES[a] = "double";
-							$("#img_plug"+a + "_1").attr('src', "themes/images/Generic48_NF.png");
-							$("#img_plug"+a + "_2").attr('src', "themes/images/Generic48_NF.png");
-							plugSTATES[a] = "0";
-						}	
+						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						plugSTATES[a] = "0";
+						$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
 					}
 
 					plugUUIDS[a] = data[key].uuid;
