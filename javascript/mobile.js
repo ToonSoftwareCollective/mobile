@@ -615,7 +615,7 @@ function handlePlugsInfo(data)
 		
 		for (var key in data) {
 			if (key != "dev_settings_device"){
-				if (data[key].type =="FGWPF102" || data[key].type =="FGWP011" || data[key].type =="NAS_WR01Z" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
+				if (data[key].type =="FGWPF102" || data[key].type =="FGWP011" || data[key].type =="NAS_WR01Z" || data[key].type =="NAS_WR01ZE" || data[key].type =="NAS_WR02ZE" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
 					plugsAvailable = 1;
 					
 					$("#name_plug"+a).html(data[key].name);
