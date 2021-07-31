@@ -1,3 +1,9 @@
+1.0.22
+- 2 neocoolcam plugs added
+
+1.0.21
+- IY better plug support
+
 1.0.20
 - differtent location for water
 
