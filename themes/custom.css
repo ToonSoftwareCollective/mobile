@@ -68,6 +68,9 @@
 	background-color: #00aeef;
 }
 
+td {
+  text-align: center;
+}
 
 /* -- General -- */
 .ui-corner-all, .ui-btn-corner-all {
@@ -75,6 +78,7 @@
 	-webkit-border-radius: 0.4em;
 	border-radius: 0.4em;
 }
+
 .ui-btn-corner-all {
 	-moz-border-radius: 0.6em;
 	-webkit-border-radius: 0.6em;
@@ -112,6 +116,10 @@ fieldset.ui-controlgroup {
 	margin: 0;
 }
 
+.inline { 
+    display: inline-block; 
+    }
+	
 
 /* -- Warning bar -- */
 .warning-bar {

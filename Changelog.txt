@@ -1,3 +1,6 @@
+1.0.23
+- smoke detectors added
+
 1.0.22
 - 2 neocoolcam plugs added
 

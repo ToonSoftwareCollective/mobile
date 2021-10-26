@@ -28,6 +28,7 @@ var solarTotalAVG = 0;
 
 var solarAvailable = 1;
 var plugsAvailable = 1;
+var detectorsAvailable = 1;
 
 
 var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
@@ -252,6 +253,16 @@ function plugsPageHidden()
 		clearTimeout(getPlugsInfo());
 }
 
+function detectorsPageHidden()
+{
+	if(getPlugsInfo() != null)
+		clearTimeout(getPlugsInfo());
+}
+
+function detectorsPageLoaded()
+{
+	getPlugsInfo();
+}
 
 function setTempToDiv(divId, temp)
 {
@@ -608,10 +619,92 @@ function getnewStatus(a)
 
 function handlePlugsInfo(data)
 {		var a = 1;
+		var b = 1;
 		plugsAvailable = 0;		
+		detectorsAvailable = 0;						   
 		for(var i=1; i<plugSTATES.length; i++){
 			$('#plug' + i).hide();
 		}
+		for(var i=1; i<=9; i++){
+			$('#detector' + i).hide();
+		}
+		for (var detector in data) {
+			if (detector != "dev_settings_device"){
+				if (data[detector].type =="FGSD002"){
+					detectorsAvailable = 1;
+					console.debug("Smoke detector found");
+					console.debug(i);
+					
+					
+					$("#name_detector"+b).html(data[detector].name);
+					$("#alarm_detector"+b).html(data[detector].AlarmStatus);
+
+					if (data[detector].AlarmStatus =="clear"){
+						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector-systray.svg");
+						$("#alarm_detector"+b).html("Geen alarm");
+					}
+					
+					if (data[detector].AlarmStatus =="alarm"){
+						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector.png");
+						$("#alarm_detector"+b).html("ALARM!!!");
+					}
+					
+					if (data[detector].AlarmStatus =="test"){
+						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector.png");
+						$("#alarm_detector"+b).html("Test");
+					}
+					
+					if (data[detector].IsConnected =="1"){
+						$("#img_connected_detector"+b).attr('src', "themes/images/good.png");
+						$("#connected_detector"+b).html("Verbonden");
+					}else{
+						$("#img_connected_detector"+b).attr('src', "themes/images/bad.png");
+						$("#connected_detector"+b).html("Niet verbonden");
+					}
+					
+					if (data[detector].TamperingDetected =="0"){
+						$("#img_tamper_detector"+b).attr('src', "themes/images/good.png");
+						$("#tampered_detector"+b).html("Tamper OK");
+					}else{
+						$("#img_tamper_detector"+b).attr('src', "themes/images/bad.png");
+						$("#tampered_detector"+b).html("Tamper Fout!");
+					}
+					
+					if(data[detector].CurrentBatteryLevel <0)
+						$("#img_batt_detector"+b).attr('src', "themes/images/battery-unknown.png");
+					if(data[detector].CurrentBatteryLevel >0 && data[detector].CurrentBatteryLevel <40)
+						$("#img_batt_detector"+b).attr('src', "themes/images/battery-low.png");
+					if(data[detector].CurrentBatteryLevel >=40 && data[detector].CurrentBatteryLevel <75)
+						$("#img_batt_detector"+b).attr('src', "themes/images/battery-mid.png");
+					if(data[detector].CurrentBatteryLevel >=75 && data[detector].CurrentBatteryLevel <90)
+						$("#img_batt_detector"+b).attr('src', "themes/images/battery-high.png");
+					if(data[detector].CurrentBatteryLevel >=90)
+						$("#img_batt_detector"+b).attr('src', "themes/images/battery-full.png");
+					
+					$("#batt_detector"+b).html(data[detector].CurrentBatteryLevel);
+					
+					$("#temp_detector"+b).html(data[detector].CurrentTemperature);
+					$("#detector"+b).show();
+					b++;
+				}
+			}
+		}
+		
+		if (detectorsAvailable == 0){
+			$('#dot_15').hide();
+			$('#dot_25').hide();
+			$('#dot_35').hide();
+			$('#dot_45').hide();
+			$('#dot_55').hide();
+		}
+		else{
+			$('#dot_15').show();
+			$('#dot_25').show();
+			$('#dot_35').show();
+			$('#dot_45').show();
+			$('#dot_55').show();
+		}
+					 
 		
 		for (var key in data) {
 			if (key != "dev_settings_device"){
@@ -653,12 +746,14 @@ function handlePlugsInfo(data)
 			$('#dot_24').hide();
 			$('#dot_34').hide();
 			$('#dot_44').hide();
+			$('#dot_54').hide();
 		}
 		else{
 			$('#dot_14').show();
 			$('#dot_24').show();
 			$('#dot_34').show();
 			$('#dot_44').show();
+			$('#dot_54').show();
 		}
 		
 		plugsInfoT = setTimeout("getPlugsInfo()", 10000);
@@ -757,6 +852,7 @@ function handleSolarFlowInfo(data)
 			$('#dot_23').hide();
 			$('#dot_33').hide();
 			$('#dot_43').hide();
+			$('#dot_53').hide();
 		}
 		else{
 			solarAvailable = 1;
@@ -764,6 +860,7 @@ function handleSolarFlowInfo(data)
 			$('#dot_23').show();
 			$('#dot_33').show();
 			$('#dot_43').show();
+			$('#dot_53').show();
 		}
 	setUsageInfo("solarflow", $current , $max/3 );
 	solarInfoT = setTimeout("getSolarFlowInfo()", 10000);
