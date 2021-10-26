@@ -80,7 +80,10 @@
 			}
 			
 		  })
-		 
+		
+		 $("#detectors").bind('swipeleft',function(event, ui){ 			 
+			 $.mobile.changePage("#main", { transition: "slide"} ); 
+		  })
 		 
 		 $("#plugs").bind('swiperight',function(event, ui){ 
 		   if (solarAvailable == 1){
