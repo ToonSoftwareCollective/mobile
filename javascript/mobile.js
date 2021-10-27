@@ -662,7 +662,6 @@ function handlePlugsInfo(data)
 			if (detector != "dev_settings_device"){
 				if (data[detector].type =="FGSD002"){
 					detectorsAvailable = 1;
-					if (data[detector].IsConnected =="1" && !isNaN(data[detector].CurrentTemperature)){
 						$("#img_connected_detector"+b).attr('src', "themes/images/good.png");
 						$("#connected_detector"+b).html("Verbonden");
 						$("#batt_detector"+b).html(data[detector].CurrentBatteryLevel);
