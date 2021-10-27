@@ -34,6 +34,9 @@ var detectorsAvailable = 1;
 var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
 var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
 
+var detectorUUIDS = ["", "", "", "", "", "", "", "","", ""];
+var detectorNAMES = ["", "", "", "", "", "", "", "","", ""];
+
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
 
@@ -60,7 +63,8 @@ var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
 var VERSION_INFO_URL = "version.txt?tst=" + Math.random();
-//var VERSION_INFO_URL = "version.txt";
+var DETECTOR_INFO_URL = "events.txt?tst=" + Math.random();
+
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
 var SET_TARGET_TEMP_URLCTOR				= function(setpoint) { return "/happ_thermstat?action=roomSetpoint&Setpoint=" + setpoint; };
@@ -101,6 +105,7 @@ function initPage()
 	if(jQuery.hcb.proxy.supported == false)
 	{	
 		getVersionInfo();
+		getDetectorInfo();
 		getSolarFlowInfo();
 		getPlugsInfo();
 		$.mobile.changePage("#main");
@@ -172,6 +177,31 @@ function getVersionInfo()
 			$("#version").html("versie " + data);
 		}else{
 			$("#version").html("");
+		}
+  });
+}
+
+function getDetectorInfo()
+{	
+	var nr = 0;
+	$.get(DETECTOR_INFO_URL, function(data, status){
+		if (status.indexOf("succ")>-1){
+			var devices = data.split("<device>");
+			for (var devicenr in devices) {
+				if (devices[devicenr].indexOf("FGSD002")>-1){
+					var start = devices[devicenr].indexOf("<internalAddress>") + "<internalAddress>".length;
+					var end = devices[devicenr].indexOf("</internalAddress>");
+					var detectorUUID = devices[devicenr].substring(start,end);
+					console.debug( detectorUUID);
+					var start2 = devices[devicenr].indexOf("<devName>") + "<devName>".length;
+					var end2 = devices[devicenr].indexOf("</devName>");
+					var detectorName = devices[devicenr].substring(start2,end2);
+					console.debug( detectorName);
+					detectorUUIDS[nr] = detectorUUID;
+					detectorNAMES[nr] = detectorName;
+					nr++;
+				}
+			}
 		}
   });
 }
@@ -632,58 +662,71 @@ function handlePlugsInfo(data)
 			if (detector != "dev_settings_device"){
 				if (data[detector].type =="FGSD002"){
 					detectorsAvailable = 1;
-					console.debug("Smoke detector found");
-					console.debug(i);
-					
-					
-					$("#name_detector"+b).html(data[detector].name);
-					$("#alarm_detector"+b).html(data[detector].AlarmStatus);
-
-					if (data[detector].AlarmStatus =="clear"){
-						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector-systray.svg");
-						$("#alarm_detector"+b).html("Geen alarm");
-					}
-					
-					if (data[detector].AlarmStatus =="alarm"){
-						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector.png");
-						$("#alarm_detector"+b).html("ALARM!!!");
-					}
-					
-					if (data[detector].AlarmStatus =="test"){
-						$("#img_connected_detector"+b).attr('src', "themes/images/smokedetector.png");
-						$("#alarm_detector"+b).html("Test");
-					}
-					
-					if (data[detector].IsConnected =="1"){
+					if (data[detector].IsConnected =="1" && !isNaN(data[detector].CurrentTemperature)){
 						$("#img_connected_detector"+b).attr('src', "themes/images/good.png");
 						$("#connected_detector"+b).html("Verbonden");
+						$("#batt_detector"+b).html(data[detector].CurrentBatteryLevel);
+						$("#temp_detector"+b).html(data[detector].CurrentTemperature + "&#x00B0;C");
+						
+						if (data[detector].TamperingDetected =="0"){
+							$("#img_tamper_detector"+b).attr('src', "themes/images/good.png");
+							$("#tampered_detector"+b).html("Tamper OK");
+						}else{
+							$("#img_tamper_detector"+b).attr('src', "themes/images/bad.png");
+							$("#tampered_detector"+b).html("Tamper Fout!");
+						}
+						
+						if (data[detector].AlarmStatus =="clear"){
+							$("#img_smoke_detector"+b).attr('src', "themes/images/smokedetector-systray.png");
+							$("#alarm_detector"+b).html("Geen alarm");
+						}
+						
+						if (data[detector].AlarmStatus =="alarm"){
+							$("#img_smoke_detector"+b).attr('src', "themes/images/smokedetector.png");
+							$("#alarm_detector"+b).html("ALARM!!!");
+						}
+						
+						if (data[detector].AlarmStatus =="alarmTest"){
+							$("#img_smoke_detector"+b).attr('src', "themes/images/smokedetector.png");
+							$("#alarm_detector"+b).html("Test");
+						}
+						
+						if(data[detector].CurrentBatteryLevel <0){
+							$("#img_batt_detector"+b).attr('src', "themes/images/battery-low.png");
+							$("#batt_detector"+b).html("XXX");
+						}
+						
+						if(data[detector].CurrentBatteryLevel >=0 && data[detector].CurrentBatteryLevel <40){
+							$("#img_batt_detector"+b).attr('src', "themes/images/battery-low.png");
+						}
+						if(data[detector].CurrentBatteryLevel >=40 && data[detector].CurrentBatteryLevel <75){
+							$("#img_batt_detector"+b).attr('src', "themes/images/battery-mid.png");
+						}	
+						if(data[detector].CurrentBatteryLevel >=75 && data[detector].CurrentBatteryLevel <90){
+							$("#img_batt_detector"+b).attr('src', "themes/images/battery-high.png");
+						}	
+						if(data[detector].CurrentBatteryLevel >=90){
+							$("#img_batt_detector"+b).attr('src', "themes/images/battery-full.png");
+						}
+					
 					}else{
 						$("#img_connected_detector"+b).attr('src', "themes/images/bad.png");
 						$("#connected_detector"+b).html("Niet verbonden");
-					}
-					
-					if (data[detector].TamperingDetected =="0"){
-						$("#img_tamper_detector"+b).attr('src', "themes/images/good.png");
-						$("#tampered_detector"+b).html("Tamper OK");
-					}else{
-						$("#img_tamper_detector"+b).attr('src', "themes/images/bad.png");
-						$("#tampered_detector"+b).html("Tamper Fout!");
-					}
-					
-					if(data[detector].CurrentBatteryLevel <0)
+						$("#img_tamper_detector"+b).attr('src', "themes/images/empty.png");
+						$("#img_smoke_detector"+b).attr('src', "themes/images/empty.png");
+						$("#alarm_detector"+b).html("");
+						$("#tampered_detector"+b).html("");
+						$("#img_temp_detector"+b).attr('src', "themes/images/empty.png");
+						$("#temp_detector"+b).html("");
+						$("#batt_detector"+b).html("0");
 						$("#img_batt_detector"+b).attr('src', "themes/images/battery-unknown.png");
-					if(data[detector].CurrentBatteryLevel >0 && data[detector].CurrentBatteryLevel <40)
-						$("#img_batt_detector"+b).attr('src', "themes/images/battery-low.png");
-					if(data[detector].CurrentBatteryLevel >=40 && data[detector].CurrentBatteryLevel <75)
-						$("#img_batt_detector"+b).attr('src', "themes/images/battery-mid.png");
-					if(data[detector].CurrentBatteryLevel >=75 && data[detector].CurrentBatteryLevel <90)
-						$("#img_batt_detector"+b).attr('src', "themes/images/battery-high.png");
-					if(data[detector].CurrentBatteryLevel >=90)
-						$("#img_batt_detector"+b).attr('src', "themes/images/battery-full.png");
+					}
 					
-					$("#batt_detector"+b).html(data[detector].CurrentBatteryLevel);
-					
-					$("#temp_detector"+b).html(data[detector].CurrentTemperature);
+					for (var nr in detectorUUIDS){
+						if (detectorUUIDS[nr] == data[detector].uuid){
+							$("#name_detector"+b).html(detectorNAMES[nr]);
+						}
+					}
 					$("#detector"+b).show();
 					b++;
 				}
