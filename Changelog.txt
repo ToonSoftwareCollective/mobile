@@ -1,3 +1,6 @@
+1.0.24
+- smoke detectors changed, names added
+
 1.0.23
 - smoke detectors added
 
