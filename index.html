@@ -80,10 +80,11 @@
 			}
 			
 		  })
-		
-		 $("#detectors").bind('swipeleft',function(event, ui){ 			 
+		 
+		$("#detectors").bind('swipeleft',function(event, ui){ 			 
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 		  })
+
 		 
 		 $("#plugs").bind('swiperight',function(event, ui){ 
 		   if (solarAvailable == 1){
@@ -819,28 +820,28 @@
 			<div class="plug-title" id="name_detector1">Detector</div>
 				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector1"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector1"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector1"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector1"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector1"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector1"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector1"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector1"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector1"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector1">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector1">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector1">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector1">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector1">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector1">connected</div></td>
-					<td><div class="connected" id="tampered_detector1">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector1">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector1">connected</div></td>
 				  </tr>
 				  
 				</table>
@@ -848,260 +849,253 @@
 		</fieldset>
 		<fieldset id="detector2">
 			<div class="plug-title" id="name_detector2">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector2"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/bad.png" style="width:28px;height:28px;" id="img_batt_detector2"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector2"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector2"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector2"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector2"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector2"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector2"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector2"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector2">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector2">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector2">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector2">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector2">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector2">connected</div></td>
-					<td><div class="connected" id="tampered_detector2">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector2">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector2">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector3">
 			<div class="plug-title" id="name_detector3">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector3"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector3"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector3"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector3"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector3"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector3"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector3"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector3"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector3"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector3">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector3">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector3">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector3">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector3">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector3">connected</div></td>
-					<td><div class="connected" id="tampered_detector3">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector3">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector3">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector4">
 			<div class="plug-title" id="name_detector4">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector4"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector4"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector4"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector4"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector4"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector4"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector4"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector4"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector4"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector4">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector4">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector4">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector4">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector4">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector4">connected</div></td>
-					<td><div class="connected" id="tampered_detector4">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector4">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector4">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector5">
 			<div class="plug-title" id="name_detector5">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector5"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector5"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector5"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector5"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector5"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector5"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector5"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector5"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector5"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector5">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector5">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector5">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector5">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector5">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector5">connected</div></td>
-					<td><div class="connected" id="tampered_detector5">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector5">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector5">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
-		
 		<fieldset id="detector6">
 			<div class="plug-title" id="name_detector6">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector6"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector6"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector6"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector6"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector6"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector6"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector6"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector6"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector6"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector6">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector6">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector6">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector6">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector6">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector6">connected</div></td>
-					<td><div class="connected" id="tampered_detector6">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector6">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector6">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector7">
 			<div class="plug-title" id="name_detector7">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector7"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector7"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector7"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector7"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector7"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector7"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector7"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector7"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector7"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector7">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector7">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector7">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector7">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector7">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector7">connected</div></td>
-					<td><div class="connected" id="tampered_detector7">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector7">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector7">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector8">
 			<div class="plug-title" id="name_detector8">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector8"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector8"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector8"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector8"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector8"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector8"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector8"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector8"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector8"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector8">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector8">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector8">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector8">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector8">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector8">connected</div></td>
-					<td><div class="connected" id="tampered_detector8">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector8">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector8">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
-		
 		<fieldset id="detector9">
 			<div class="plug-title" id="name_detector9">Detector</div>
-				<table style="width:100%">
+				<table style="width:100%" text-align: center;>
 				  <tr>
-					<td><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector9"></img></td>
-					<td><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;"></img></td>
-					<td><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector9"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector9"></img></td>
-					<td><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector9"></img></td>
+					<td width="20%"><img src="themes/images/smokedetector-systray.png" style="width:40px;height:28px;" id="img_smoke_detector9"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_connected_detector9"></img></td>
+					<td width="20%"><img src="themes/images/battery-high.png" style="width:28px;height:28px;" id="img_batt_detector9"></img></td>
+					<td width="20%"><img src="themes/images/temperatureLoggerTray_black.png" style="width:28px;height:28px;" id="img_temp_detector9"></img></td>
+					<td width="20%"><img src="themes/images/good.png" style="width:28px;height:28px;" id="img_tamper_detector9"></img></td>
 				  </tr>
 				  <tr>
-					<td><div class="AlarmStatus" id="alarm_detector9">AlarmStatus</div></td>
-					<td>
-						<div>
-							<div class='inline'><div class="CurrentTemperature" id="temp_detector9">20</div></div>
-							<div class='inline'><div class="CurrentBatteryLevel1">&#x00B0;C</div></div>
-						</div>
-					</td>
-					<td>
+					<td width="20%"><div class="AlarmStatus" id="alarm_detector9">AlarmStatus</div></td>
+					<td width="20%"><div class="connected" id="connected_detector9">connected</div></td>
+					<td width="20%">
 						<div>
 							<div class='inline'><div class="CurrentBatteryLevel1" id="batt_detector9">100</div></div>
 							<div class='inline'><div class="CurrentBatteryLevel1"> %</div></div>
 						</div>
 					</td>
-					<td><div class="connected" id="connected_detector9">connected</div></td>
-					<td><div class="connected" id="tampered_detector9">connected</div></td>
+					<td width="20%">
+						<div>
+							<div class='inline'  ><div class="CurrentTemperature" id="temp_detector9">20</div></div>
+							<div class='inline'><div class="CurrentBatteryLevel1"></div></div>
+						</div>
+					</td>
+					<td width="20%"><div class="connected" id="tampered_detector9">connected</div></td>
 				  </tr>
 				  
 				</table>
 			<div>
 		</fieldset>
+
 	</div><!-- /content -->
 
 	<div data-role="footer" data-position="fixed" data-theme="f">
