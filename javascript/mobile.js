@@ -686,7 +686,7 @@ function handlePlugsInfo(data)
 							$("#alarm_detector"+b).html("ALARM!!!");
 						}
 						
-						if (data[detector].AlarmStatus =="alarmTest"){
+						if (data[detector].AlarmStatus =="testalarm"){
 							$("#img_smoke_detector"+b).attr('src', "themes/images/smokedetector.png");
 							$("#alarm_detector"+b).html("Test");
 						}
