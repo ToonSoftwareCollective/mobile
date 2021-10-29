@@ -63,7 +63,7 @@ var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
 var VERSION_INFO_URL = "version.txt?tst=" + Math.random();
-var DETECTOR_INFO_URL = "events.txt?tst=" + Math.random();
+var DETECTOR_INFO_URL = "config_happ_eventmgr.xml?tst=" + Math.random();
 
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
