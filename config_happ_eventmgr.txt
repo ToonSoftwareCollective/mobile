@@ -1,1 +1,0 @@
-/qmf/config/config_happ_eventmgr.xml
