@@ -1,3 +1,4 @@
+
 //Various programStates
 
 var debugOn = 1;
@@ -760,7 +761,7 @@ function handlePlugsInfo(data)
 					if (data[key].IsConnected =="1"){
 						$("#name_plug"+a).removeClass("plug-title-nf");
 						$("#us_plug"+a).removeClass("usage-nf");
-						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						$("#img_plug"+a + "_2").attr('src', "themes/images/empty.png");
 						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
 							plugSTATES[a] = "1";
 							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
@@ -771,7 +772,7 @@ function handlePlugsInfo(data)
 					}else{
 						$("#name_plug"+a).addClass("plug-title-nf");
 						$("#us_plug"+a).addClass("usage-nf");
-						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						$("#img_plug"+a + "_2").attr('src', "themes/images/empty.png");
 						plugSTATES[a] = "0";
 						$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
 					}
