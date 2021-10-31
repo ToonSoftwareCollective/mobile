@@ -713,11 +713,11 @@ function handlePlugsInfo(data)
 					}else{
 						$("#img_connected_detector"+b).attr('src', "themes/images/bad.png");
 						$("#connected_detector"+b).html("Niet verbonden");
-						$("#img_tamper_detector"+b).attr('src', "themes/images/Empty.png");
-						$("#img_smoke_detector"+b).attr('src', "themes/images/Empty.png");
+						$("#img_tamper_detector"+b).attr('src', "themes/images/empty.png");
+						$("#img_smoke_detector"+b).attr('src', "themes/images/empty.png");
 						$("#alarm_detector"+b).html("");
 						$("#tampered_detector"+b).html("");
-						$("#img_temp_detector"+b).attr('src', "themes/images/Empty.png");
+						$("#img_temp_detector"+b).attr('src', "themes/images/empty.png");
 						$("#temp_detector"+b).html("");
 						$("#batt_detector"+b).html("0");
 						$("#img_batt_detector"+b).attr('src', "themes/images/battery-unknown.png");
