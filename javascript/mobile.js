@@ -1,3 +1,4 @@
+
 //Various programStates
 
 var debugOn = 1;
@@ -63,7 +64,7 @@ var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
 var VERSION_INFO_URL = "version.txt?tst=" + Math.random();
-var DETECTOR_INFO_URL = "events.txt?tst=" + Math.random();
+var DETECTOR_INFO_URL = "config_happ_eventmgr.txt?tst=" + Math.random();
 
 var THERMOSTAT_INFO_URL = "/happ_thermstat?action=getThermostatInfo";
 var THERMOSTAT_CHANGE_SS_BASE_URL = "/happ_thermstat?action=changeSchemeState";
@@ -686,7 +687,7 @@ function handlePlugsInfo(data)
 							$("#alarm_detector"+b).html("ALARM!!!");
 						}
 						
-						if (data[detector].AlarmStatus =="alarmTest"){
+						if (data[detector].AlarmStatus =="testalarm"){
 							$("#img_smoke_detector"+b).attr('src', "themes/images/smokedetector.png");
 							$("#alarm_detector"+b).html("Test");
 						}
@@ -760,7 +761,7 @@ function handlePlugsInfo(data)
 					if (data[key].IsConnected =="1"){
 						$("#name_plug"+a).removeClass("plug-title-nf");
 						$("#us_plug"+a).removeClass("usage-nf");
-						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						$("#img_plug"+a + "_2").attr('src', "themes/images/empty.png");
 						if (data[key].TargetStatus == "1"  || data[key].CurrentState == "1"){
 							plugSTATES[a] = "1";
 							$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_On.png");
@@ -771,7 +772,7 @@ function handlePlugsInfo(data)
 					}else{
 						$("#name_plug"+a).addClass("plug-title-nf");
 						$("#us_plug"+a).addClass("usage-nf");
-						$("#img_plug"+a + "_2").attr('src', "themes/images/Empty.png");
+						$("#img_plug"+a + "_2").attr('src', "themes/images/empty.png");
 						plugSTATES[a] = "0";
 						$("#img_plug"+a + "_1").attr('src', "themes/images/WallSocket48_NF.png");
 					}
