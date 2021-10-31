@@ -668,6 +668,7 @@ function handlePlugsInfo(data)
 						$("#connected_detector"+b).html("Verbonden");
 						$("#batt_detector"+b).html(data[detector].CurrentBatteryLevel);
 						$("#temp_detector"+b).html(data[detector].CurrentTemperature + "&#x00B0;C");
+						$("#img_temp_detector"+b).attr('src', "themes/images/temperatureLoggerTray_black.png");
 						
 						if (data[detector].TamperingDetected =="0"){
 							$("#img_tamper_detector"+b).attr('src', "themes/images/good.png");
