@@ -30,13 +30,16 @@ var solarTotalAVG = 0;
 var solarAvailable = 1;
 var plugsAvailable = 1;
 var detectorsAvailable = 1;
-
+var temperatureAvailable = 1;
 
 var plugUUIDS = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
 var plugSTATES = ["", "", "", "", "", "", "", "","", "", "", "", "","", "", "", "", "", "", "", "","", "", "", "", ""];
 
 var detectorUUIDS = ["", "", "", "", "", "", "", "","", ""];
 var detectorNAMES = ["", "", "", "", "", "", "", "","", ""];
+
+var temperatureNAMES = ["", "", "", "", "", "", "", "","", ""];
+var temperatureSTATES = ["", "", "", "", "", "", "", "","", ""];
 
 var THERMOSTAT_STATES = "/hcb_config?action=getObjectConfigTree&package=happ_thermstat&internalAddress=thermostatStates";
 var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
@@ -63,6 +66,8 @@ var PLUGS_INFO_URL = "/hdrv_zwave?action=getDevices.json";
 
 var PLUG_SWITCH_URL = "/hdrv_zwave?action=basicCommand&uuid=";
 
+var TEMPERATURE_INFO_URL =  "/temperature.html?tst=" + Math.random();
+
 var VERSION_INFO_URL = "version.txt?tst=" + Math.random();
 var DETECTOR_INFO_URL = "config_happ_eventmgr.txt?tst=" + Math.random();
 
@@ -85,6 +90,7 @@ var waterInfoT = null;
 var waterFlowInfoT = null;
 
 var plugsInfoT = null;
+var temperatureInfoT = null;
 
 var setTempT = null;
 
@@ -109,6 +115,7 @@ function initPage()
 		getDetectorInfo();
 		getSolarFlowInfo();
 		getPlugsInfo();
+		getTemperatureInfo_2();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -147,8 +154,9 @@ function logout()
 	clearTimeout(produFlowInfoT);
 	clearTimeout(produNTInfoT);
 	clearTimeout(pwrusageInfoT);
-	clearTimeout(waterFlowInfoT);
+	//clearTimeout(waterFlowInfoT);
 	clearTimeout(plugsInfoT);
+	clearTimeout(temperatureInfoT);
 	
 	pwrusageInfoT = null;
 	elecLTInfoT = null;
@@ -162,6 +170,7 @@ function logout()
 	waterInfoT = null;
 	waterFlowInfoT = null;
 	plugsInfoT = null;
+	temperatureInfoT = null;
 
 	clearTimeout(setTempT);	
 	setTempT = null;
@@ -206,6 +215,31 @@ function getDetectorInfo()
 		}
   });
 }
+
+
+function getTemperatureInfo_2()
+{	temperatureAvailable = 0
+	$.get(TEMPERATURE_INFO_URL, function(data, status){
+		if (status.indexOf("succ")>-1){
+			temperatureAvailable = 1;
+			$('#dot_16').show();
+			$('#dot_26').show();
+			$('#dot_36').show();
+			$('#dot_46').show();
+			$('#dot_56').show();
+			$('#dot_66').show();
+		}else{
+			temperatureAvailable = 0;
+			$('#dot_16').hide();
+			$('#dot_26').hide();
+			$('#dot_36').hide();
+			$('#dot_46').hide();
+			$('#dot_56').hide();
+			$('#dot_66').hide();
+		}
+    });
+}
+
 
 function login()
 {	
@@ -295,6 +329,18 @@ function detectorsPageLoaded()
 	getPlugsInfo();
 }
 
+function temperaturePageHidden()
+{
+	if(getTemperatureInfo() != null)
+		clearTimeout(getTemperatureInfo());
+}
+
+function temperaturePageLoaded()
+{
+	getTemperatureInfo();
+}
+
+
 function setTempToDiv(divId, temp)
 {
 	if(!$("#"+divId))
@@ -330,7 +376,6 @@ function showFormattedIndoorTemp(temperature, setpoint)
 	}
 	
 	$("#cur_temp").html( high + ","+ low10 + "&deg C");
-	
 	setTempToDiv("set_temp", setpoint);
 }
 
@@ -741,6 +786,7 @@ function handlePlugsInfo(data)
 			$('#dot_35').hide();
 			$('#dot_45').hide();
 			$('#dot_55').hide();
+			$('#dot_65').hide();
 		}
 		else{
 			$('#dot_15').show();
@@ -748,12 +794,13 @@ function handlePlugsInfo(data)
 			$('#dot_35').show();
 			$('#dot_45').show();
 			$('#dot_55').show();
+			$('#dot_65').show();
 		}
 					 
 		
 		for (var key in data) {
 			if (key != "dev_settings_device"){
-				if (data[key].type =="FGWPF102" || data[key].type =="FGWP011" || data[key].type =="NAS_WR01Z" || data[key].type =="NAS_WR01ZE" || data[key].type =="NAS_WR02ZE" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
+				if (data[key].type =="FGWPF102" || data[key].type =="ZMNHYD1" || data[key].type =="FGWP011" || data[key].type =="NAS_WR01Z" || data[key].type =="NAS_WR01ZE" || data[key].type =="NAS_WR02ZE" || data[key].type =="EMPOWER"  || data[key].type =="EM6550_v1"){
 					plugsAvailable = 1;
 					
 					$("#name_plug"+a).html(data[key].name);
@@ -792,6 +839,7 @@ function handlePlugsInfo(data)
 			$('#dot_34').hide();
 			$('#dot_44').hide();
 			$('#dot_54').hide();
+			$('#dot_64').hide();
 		}
 		else{
 			$('#dot_14').show();
@@ -799,9 +847,59 @@ function handlePlugsInfo(data)
 			$('#dot_34').show();
 			$('#dot_44').show();
 			$('#dot_54').show();
+			$('#dot_64').show();
 		}
 		
 		plugsInfoT = setTimeout("getPlugsInfo()", 10000);
+}
+
+
+
+
+
+
+function handleTemperatureInfo(data)
+{		temperatureAvailable = 0;
+		for(var i=1; i<temperatureNAMES.length; i++){
+			$('#temperature' + i).hide();
+		}
+		
+		var nr = 1;
+		
+		var devices = data.split("\n");
+		for (var devicenr in devices) {
+			if(devices[devicenr] !=""){
+				var deviceArray = devices[devicenr].split("-@@-");
+				$("#name_temperature"+nr).html(deviceArray[0]);
+				$("#data_temp"+nr).html(deviceArray[1]);
+				if(deviceArray[2] != null) {
+					$("#hygr_temp"+nr).html(deviceArray[2] + "%");
+					$("#hygr_temp"+nr).show();
+				}else{
+					$("#hygr_temp"+nr).hide();
+				}
+				$("#temperature"+nr).show();
+				temperatureAvailable = 1;
+				nr++;
+			}
+		}
+		if (temperatureAvailable == 0){
+			$('#dot_16').hide();
+			$('#dot_26').hide();
+			$('#dot_36').hide();
+			$('#dot_46').hide();
+			$('#dot_56').hide();
+			$('#dot_66').hide();
+		}
+		else{
+			$('#dot_16').show();
+			$('#dot_26').show();
+			$('#dot_36').show();
+			$('#dot_46').show();
+			$('#dot_56').show();
+			$('#dot_66').show();
+		}
+		temperatureInfoT = setTimeout("getTemperatureInfo()", 10000);
 }
 
 
@@ -1199,6 +1297,14 @@ function getPlugsInfo()
 	if(plugsInfoT != null)
 		clearTimeout(plugsInfoT);
 	$.getJSON( PLUGS_INFO_URL, handlePlugsInfo);
+}
+
+
+function getTemperatureInfo()
+{
+	if(temperatureInfoT != null)
+		clearTimeout(temperatureInfoT);
+	$.get(TEMPERATURE_INFO_URL, handleTemperatureInfo);
 }
 
 

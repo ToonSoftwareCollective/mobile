@@ -1,3 +1,6 @@
+1.0.25
+- toonTemp added to mobile, qubino plugs added
+
 1.0.24
 - smoke detectors changed, names added
 

@@ -38,6 +38,9 @@
 		$("#detector").live( 'pageshow', detectorsPageLoaded);
 		$("#detector").live( 'pagehide', detectorsPageHidden);
 		
+		$("#temperature").live( 'pageshow', temperaturePageLoaded);
+		$("#temperature").live( 'pagehide', temperaturePageHidden);
+		
 	$(function(){ 
 			   
 		$("#main").bind('swipeleft',function(event, ui){            
@@ -54,6 +57,9 @@
 			else if (detectorsAvailable == 1){
 				$.mobile.changePage("#detectors", { transition: "slide"} ); 
 			}
+			else if (temperatureAvailable == 1){
+				$.mobile.changePage("#temperature", { transition: "slide"} ); 
+			}
 			else{
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 			}
@@ -66,6 +72,9 @@
 			else if (detectorsAvailable == 1){
 				$.mobile.changePage("#detectors", { transition: "slide"} ); 
 			}
+			else if (temperatureAvailable == 1){
+				$.mobile.changePage("#temperature", { transition: "slide"} ); 
+			}
 			else{
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 			}
@@ -75,13 +84,26 @@
 			if (detectorsAvailable == 1){
 				$.mobile.changePage("#detectors", { transition: "slide"} ); 
 			}
+			else if (temperatureAvailable == 1){
+				$.mobile.changePage("#temperature", { transition: "slide"} ); 
+			}
 			else{
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 			}
 			
 		  })
-		 
+		  
 		$("#detectors").bind('swipeleft',function(event, ui){ 			 
+			if (temperatureAvailable == 1){
+				$.mobile.changePage("#temperature", { transition: "slide"} ); 
+			}
+			else{
+			 $.mobile.changePage("#main", { transition: "slide"} ); 
+			}
+		  })
+		  	  
+		 
+		$("#temperature").bind('swipeleft',function(event, ui){ 			 
 			 $.mobile.changePage("#main", { transition: "slide"} ); 
 		  })
 
@@ -107,7 +129,23 @@
 			else{
 			 $.mobile.changePage("#consum", { transition: "reverse slide"} ); 
 			} 
-		 })
+		})
+		
+		$("#temperature").bind('swiperight',function(event, ui){ 
+			if (detectorsAvailable == 1){
+				$.mobile.changePage("#detectors", { transition: "reverse slide"} ); 
+			}
+		    if (plugsAvailable == 1){
+				$.mobile.changePage("#plugs", { transition: "reverse slide"} ); 
+			}
+		    else if (solarAvailable == 1){
+				$.mobile.changePage("#solar", { transition: "reverse slide"} ); 
+			}
+			else{
+			 $.mobile.changePage("#consum", { transition: "reverse slide"} ); 
+			} 
+		})
+		
 		
 		$("#solar").bind('swiperight',function(event, ui){ 
 		   $.mobile.changePage("#consum", { transition: "reverse slide"} );  
@@ -119,8 +157,10 @@
 		   
 		   
 		$("#main").bind('swiperight',function(event, ui){
-		
-			if (detectorsAvailable == 1){
+			if (temperatureAvailable == 1){
+				$.mobile.changePage("#temperature", { transition: "reverse slide"} ); 
+			}
+			else if (detectorsAvailable == 1){
 				$.mobile.changePage("#detectors", { transition: "reverse slide"} ); 
 			}
 			else if (plugsAvailable == 1){
@@ -251,6 +291,7 @@
 				<li class="dot" id="dot_13"></li>
 				<li class="dot" id="dot_14"></li>
 				<li class="dot" id="dot_15"></li>
+				<li class="dot" id="dot_16"></li>
             </ul>
         </div>
     </div>
@@ -375,6 +416,7 @@
 				<li class="dot" id="dot_23"></li>
 				<li class="dot" id="dot_24"></li>
 				<li class="dot" id="dot_25"></li>
+				<li class="dot" id="dot_26"></li>
             </ul>
         </div>
     </div>
@@ -479,6 +521,7 @@
 				<li class="dot active" id="dot_33"></li>
 				<li class="dot" id="dot_34"></li>
 				<li class="dot" id="dot_35"></li>
+				<li class="dot" id="dot_36"></li>
             </ul>
         </div>
     </div>
@@ -803,6 +846,7 @@
 				<li class="dot" id="dot_43"></li>
 				<li class="dot active" id="dot_44"></li>
 				<li class="dot" id="dot_45"></li>
+				<li class="dot" id="dot_46"></li>
             </ul>
         </div>
     </div>
@@ -1107,12 +1151,87 @@
 				<li class="dot" id="dot_53"></li>
 				<li class="dot" id="dot_54"></li>
 				<li class="dot active" id="dot_55"></li>
+				<li class="dot" id="dot_56"></li>
             </ul>
         </div>
     </div>
 
 </div><!-- /page -->
 
+
+
+<!-- page -temperature -->
+<div data-role="page" id="temperature" data-theme="f">
+	<div data-role="header" data-theme="f">
+    	<div class="logo"></div>
+    </div>
+	<div data-role="content">
+		<fieldset id="temperature1">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%" ><div class="temperature-title" ><span id="name_temperature1">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp1">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp1"></span></div></td>
+					</tr>
+			</table>
+		</fieldset>
+		<fieldset id="temperature2">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%"><div class="temperature-title" ><span id="name_temperature2">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp2">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp2"></span></div></td>
+					</tr>
+			</table></fieldset>
+		<fieldset id="temperature3">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%"><div class="temperature-title" ><span id="name_temperature3">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp3">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp3"></span></div></td>
+					</tr>
+			</table></fieldset>
+		<fieldset id="temperature4">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%"><div class="temperature-title" ><span id="name_temperature4">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp4">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp4"></span></div></td>
+					</tr>
+			</table></fieldset>
+		<fieldset id="temperature5">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%"><div class="temperature-title" ><span id="name_temperature5">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp5">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp5"></span></div></td>
+				</tr>
+			</table></fieldset>
+		<fieldset id="temperature6">
+			<table style="width:100%" text-align: left;>
+				  <tr>
+					<td width="20%"><div class="temperature-title" ><span id="name_temperature6">Temperature</span></div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "data_temp6">20</span>&#x00B0;C</div></td>
+					<td width="20%"><div class="temperature-text" ><span id = "hygr_temp6"></span></div></td>
+				</tr>
+			</table></fieldset>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="f">
+    
+    	<div data-role="navbar">
+        	<ul>
+				<li class="dot" id="dot_61"></li>
+                <li class="dot" id="dot_62"></li>
+				<li class="dot" id="dot_63"></li>
+				<li class="dot" id="dot_64"></li>
+				<li class="dot" id="dot_65"></li>
+				<li class="dot active" id="dot_66"></li>
+            </ul>
+        </div>
+    </div>
+
+</div><!-- /page -->
 
 </body>
 </html>

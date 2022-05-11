@@ -72,6 +72,7 @@ td {
   text-align: center;
 }
 
+
 /* -- General -- */
 .ui-corner-all, .ui-btn-corner-all {
 	-moz-border-radius: 0.4em;
@@ -314,6 +315,20 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 	margin-top: 30px;
 	padding: 4px 0 16px 26px;
 	color: #d9d5d5;
+}
+
+
+.temperature-title {
+	background: url(images/temperatureLoggerTray_black.png) 2px top no-repeat;
+	margin-top: 30px;
+	padding: 4px 0 16px 26px;
+	text-align: left;
+}
+
+.temperature-text {
+	margin-top: 30px;
+	padding: 4px 0 16px 26px;
+	text-align: left;
 }
 
 
