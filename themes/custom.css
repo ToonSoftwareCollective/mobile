@@ -319,15 +319,15 @@ table#modes.program .tempButton .ui-btn.ui-btn-sel.lock .ui-btn-inner {
 
 
 .temperature-title {
-	background: url(images/temperatureLoggerTray_black.png) 2px top no-repeat;
+	background: url(images/Industry-Electrical-Sensor-icon.png) 2px top no-repeat;
 	margin-top: 30px;
-	padding: 4px 0 16px 26px;
+	padding: 3px 0 16px 26px;
 	text-align: left;
 }
 
 .temperature-text {
 	margin-top: 30px;
-	padding: 4px 0 16px 26px;
+	padding: 3px 0 16px 26px;
 	text-align: left;
 }
 
