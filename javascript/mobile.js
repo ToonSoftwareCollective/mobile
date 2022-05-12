@@ -870,10 +870,15 @@ function handleTemperatureInfo(data)
 		for (var devicenr in devices) {
 			if(devices[devicenr] !=""){
 				var deviceArray = devices[devicenr].split("-@@-");
-				$("#name_temperature"+nr).html(deviceArray[0]);
+				$("#name_temperature"+nr).html("&nbsp;" + deviceArray[0]);
 				$("#data_temp"+nr).html(deviceArray[1]);
-				if(deviceArray[2] != null) {
-					$("#hygr_temp"+nr).html(deviceArray[2] + "%");
+				if(deviceArray[2] == "degr") {
+					$("#data_temp"+nr).html(deviceArray[1] + "&#x00B0;C");
+				}else{
+					$("#data_temp"+nr).html(deviceArray[1] + " " + deviceArray[2]);
+				}	
+				if(deviceArray[3] != null) {
+					$("#hygr_temp"+nr).html(deviceArray[3] + "%");
 					$("#hygr_temp"+nr).show();
 				}else{
 					$("#hygr_temp"+nr).hide();
