@@ -1,3 +1,6 @@
+1.0.28
+- added sensors info
+
 1.0.27
 - added lighttpd.conf again to the app (was removed in previous version)
 
