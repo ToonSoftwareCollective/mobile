@@ -56,6 +56,7 @@ var PRODUFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_produ_flow&
 var PRODU_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var PRODU_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt_produ&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 
+var SENSOR_INFO_URL = "/tsc/sensors?" + Math.random();
 
 //var WATER_INFO_URL =  "water_mobile.json?tst=" + Math.random();
 var WATER_INFO_URL =  "/water.html?tst=" + Math.random();
@@ -89,6 +90,8 @@ var produNTInfoT = null;
 var waterInfoT = null;
 var waterFlowInfoT = null;
 
+var sensorInfoT = null;
+
 var plugsInfoT = null;
 var temperatureInfoT = null;
 
@@ -116,6 +119,7 @@ function initPage()
 		getSolarFlowInfo();
 		getPlugsInfo();
 		getTemperatureInfo_2();
+		getSensorInfo();
 		$.mobile.changePage("#main");
 	}
 	else
@@ -1159,6 +1163,7 @@ function handleWaterInfo(data)
 {
 	//console.log("waterdata " + data)
 	if(data && (data.result == "ok"))
+
 	{
 		if(data.water)
 			//console.log("waterflow " + data.water.flow)
@@ -1174,6 +1179,21 @@ function handleWaterInfo(data)
 	}
 }
 
+
+function handleSensorInfo(data)
+{
+	console.log("sensordata " + data)
+	if(data){
+			$("#sensors").show();
+			$("#sensor1").html(data.humidity + " %");
+			$("#sensor2").html(data.tvoc  + " ppm");
+			$("#sensor3").html(data.eco2  + " ppm");
+			$("#sensor4").html(data.intensity  + " lux");
+	}
+	else{
+		 $("#sensors").hide();
+	}
+}
 
 
 function getPwrusageInfo()
@@ -1296,6 +1316,14 @@ function getWaterInfo()
 		clearTimeout(waterInfoT);
 		$.getJSON( WATER_INFO_URL, handleWaterInfo);
 }
+
+function getSensorInfo()
+{
+		if(sensorInfoT != null)
+		clearTimeout(sensorInfoT);
+		$.getJSON( SENSOR_INFO_URL, handleSensorInfo);
+}
+
 
 function getPlugsInfo()
 {
