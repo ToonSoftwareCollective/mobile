@@ -21,6 +21,8 @@ var STATE_HOLIDAY			= 4;
 
 var elecTotalToday = 0;
 var elecTotalAVG = 0;
+var gasTotalAVG = 0;
+var gasTotalToday = 0;
 
 var produTotalToday = 0;
 var produTotalAVG = 0;
@@ -47,7 +49,11 @@ var PWRUSAGE_INFO_URL = "/happ_pwrusage?action=GetCurrentUsage";
 var ELEC_INFO_LT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var ELEC_INFO_NT_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 
+var ELEC_INFO_LT_hrs_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_lt&rra=5yrhours&readableTime=1&nullForNaN=1&from=";
+var ELEC_INFO_NT_hrs_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_quantity_nt&rra=5yrhours&readableTime=1&nullForNaN=1&from=";
+
 var GASUSAGE_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=gas_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
+var GASUSAGE_INFO_hrs_URL = "/hcb_rrd?action=getRrdData&loggerName=gas_quantity&rra=5yrhours&readableTime=1&nullForNaN=1&from=";
 
 var SOLAR_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_quantity&rra=10yrdays&readableTime=1&nullForNaN=1&from=";
 var SOLARFLOW_INFO_URL = "/hcb_rrd?action=getRrdData&loggerName=elec_solar_flow&rra=5min&readableTime=1&nullForNaN=1&from=";
@@ -81,6 +87,7 @@ var elecLTInfoT = null;
 var elecNTInfoT = null;
 
 var gasusageInfoT = null;
+
 var solarInfoT = null;
 var solarFlowInfoT = null;
 var produFlowInfoT = null;
@@ -164,7 +171,6 @@ function logout()
 	
 	pwrusageInfoT = null;
 	elecLTInfoT = null;
-	elecNTInfoT = null;
 	gasusageInfoT = null;
 	solarInfoT = null;
 	solarFlowInfoT = null;
@@ -945,11 +951,10 @@ function handleElecLTInfo(data)
 		}
 	}
 	$average = Math.round($total/$numberofitems);
-	elecTotalToday = $value1 - $value2;
-	if (isNaN(elecTotalToday))elecTotalToday = 0;
 	elecTotalAVG = $average;
-	getElecNTInfo(elecTotalToday, elecTotalAVG);
+	getElecNTInfo();
 }
+
 
 function handleElecNTInfo(data)
 {
@@ -969,21 +974,75 @@ function handleElecNTInfo(data)
 		}
 	}
 	$average = Math.round($total/$numberofitems);
+	elecTotalAVG =  Math.max(elecTotalAVG,$average);
+	getElecLT_HRS_Info();
+}
+
+
+function handleElecLT_HRS_Info(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+
+	var i=0;
+	//console.log("handleElecLT_HRS_Info");
+	//console.log(data);
 	
-	//console.log("avg1: " + elecTotalAVG);
-	//console.log("avg2: " + $average);
+	for (var $key in data) {
+		if (i==0){
+			if (data[$key] != -1 && data[$key] != null) {
+				$value1 = data[$key] ;
+				//console.log("data1: " + $value1);
+			}
+		}
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = data[$key] ;
+			//console.log("data2: " + $value2);
+		}
+	}
+	elecTotalToday = $value2 - $value1;
+	//console.log("elecTotalToday1: " + elecTotalToday);
+	if (isNaN(elecTotalToday))elecTotalToday = 0;
+	getElecNT_HRS_Info(elecTotalToday);
+}
+
+
+function handleElecNT_HRS_Info(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+
+	var i=0;
+	//console.log("handleElecNT_HRS_Info");
+	//console.log(data);
 	
-	
-	var electic2 = $value1 - $value2;
+	for (var $key in data) {
+		if (i==0){
+			if (data[$key] != -1 && data[$key] != null) {
+				$value1 = data[$key] ;
+				//console.log("data1: " + $value1);
+			}
+		}
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = data[$key] ;
+			//console.log("data2: " + $value2);
+		}
+	}
+	var electic2 = $value2 - $value1;
 	if (isNaN(electic2))electic2 = 0;
 	elecTotalToday = elecTotalToday + electic2 ;
-	elecTotalAVG =  Math.max(elecTotalAVG,$average);
 	
-	//console.log("avg selected: " + elecTotalAVG);
-	
-	setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG/1000 );
-	elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
+	if (isNaN(elecTotalToday))elecTotalToday = 0;
+    //console.log("elecTotalToday2 : " + elecTotalToday);   
+
+    setUsageInfo("elecNT", Math.round(elecTotalToday/10) / 100 , elecTotalAVG/1000 );
+    elecLTInfoT = setTimeout("getElecLTInfo()", 10000);   //cycle to the LT
+
 }
+
+
 
 function handleSolarFlowInfo(data)
 {
@@ -1112,17 +1171,25 @@ function handleProduNTInfo(data)
 	produLTInfoT = setTimeout("getProduLTInfo()", 10000);   //cycle to the LT
 }
 
+
 function handleGasusageInfo(data)
 {
+	//console.log("handleGas_HRS_Info");
+	//console.log(data);
 	var $value1 = -1;
 	var $value2 = -1;
+	var $total = 0;
+	var $numberofitems = 0;
+	var $average = 1000;
 	var $found = "placeholder";
-	var $total10days = 0;
 	for (var $key in data) {
 		if (data[$key] != -1 && data[$key] != null) $found = data[$key];
 		$value2 = $value1;
 		$value1 = data[$key];
-		if ($value2 != -1) $total10days = $total10days + $value1 - $value2;
+		if ($value2 != -1) {
+			$total = $total + $value1 - $value2;
+			$numberofitems++;
+		}
 	}
 	if (isNaN($found)){
 		$("#gas").hide();
@@ -1130,9 +1197,45 @@ function handleGasusageInfo(data)
 	else{
 		$("#gas").show();
 	}
-	setUsageInfo("gas", Math.round(($value1 - $value2)/10) / 100 , $total10days / 10000);
-	gasusageInfoT = setTimeout("getGasusageInfo()", 10000);
+	$average = Math.round($total/$numberofitems);
+	gasTotalAVG = $average;
+	getGAS_HRS_Info();
 }
+
+
+function handleGasusage_HRS_Info(data)
+{
+	var $value1 = -1;
+	var $value2 = -1;
+
+	var i=0;
+	//console.log("handleGas_HRS_Info");
+	//console.log(data);
+	
+	for (var $key in data) {
+		if (i==0){
+			if (data[$key] != -1 && data[$key] != null) {
+				$value1 = data[$key] ;
+				//console.log("data1: " + $value1);
+			}
+		}
+		i++;
+		if (data[$key] != -1 && data[$key] != null) {
+			$value2 = data[$key] ;
+			//console.log("data2: " + $value2);
+		}
+	}
+	var gas2 = $value2 - $value1;
+	if (isNaN(gas2))gas2 = 0;
+	gasTotalToday = gas2 ;
+	
+	if (isNaN(gasTotalToday))gasTotalToday = 0;
+    //console.log("gasTotalToday2 : " + gasTotalToday);   
+
+    setUsageInfo("gas", Math.round(gasTotalToday/10) / 100 , gasTotalAVG/1000);
+    gasInfoT = setTimeout("getGasusageInfo()", 10000);
+}
+
 
 function handleWaterFlowInfo(data)
 {
@@ -1182,7 +1285,7 @@ function handleWaterInfo(data)
 
 function handleSensorInfo(data)
 {
-	console.log("sensordata " + data)
+	//console.log("sensordata " + data)
 	if(data){
 			$("#sensors").show();
 			$("#sensor1").html(data.humidity + " %");
@@ -1234,6 +1337,29 @@ function getElecNTInfo()
 }
 
 
+function getElecLT_HRS_Info()
+{
+	var $date = new Date();
+	$date.setDate($date.getDate()-1);
+	var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + ' 23:00:00';
+	const unixTime = Date.parse($yesterday);
+	//console.log("unixTime: " + unixTime);
+	$.getJSON(ELEC_INFO_LT_hrs_URL + $yesterday, handleElecLT_HRS_Info);
+}
+
+
+function getElecNT_HRS_Info()
+{
+	var $date = new Date();
+	$date.setDate($date.getDate()-1);
+	var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + ' 23:00:00';
+	const unixTime = Date.parse($yesterday);
+	//console.log("unixTime: " + unixTime);
+	$.getJSON(ELEC_INFO_NT_hrs_URL + $yesterday, handleElecNT_HRS_Info);
+}
+
+
+
 function getGasusageInfo()
 {
 	if(gasusageInfoT != null)
@@ -1244,6 +1370,17 @@ function getGasusageInfo()
 	$.getJSON( GASUSAGE_INFO_URL + $yesterday, handleGasusageInfo);
 
 }
+
+function getGAS_HRS_Info()
+{
+	var $date = new Date();
+	$date.setDate($date.getDate()-1);
+	var $yesterday = $date.getDate() + '-' + ($date.getMonth()+1) + '-' + $date.getFullYear() + ' 23:00:00';
+	const unixTime = Date.parse($yesterday);
+	//console.log("unixTime: " + unixTime);
+	$.getJSON(GASUSAGE_INFO_hrs_URL + $yesterday, handleGasusage_HRS_Info);
+}
+
 
 function getSolarFlowInfo()
 {
