@@ -1,3 +1,6 @@
+1.0.31
+- updated scraipg of solar
+
 1.0.30
 - updated scraping of power and gas because of time shift
 
